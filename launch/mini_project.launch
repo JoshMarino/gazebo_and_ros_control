@@ -6,7 +6,7 @@
     command="$(find xacro)/xacro.py '$(find rrbot_description)/urdf/rrbot.xacro'" />
 
   <!-- Show in Rviz   -->
-  <!--node name="rviz" pkg="rviz" type="rviz" args="-d $(find rrbot_description)/launch/rrbot.rviz"/-->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find rrbot_description)/launch/rrbot.rviz"/>
 
 
 
@@ -16,7 +16,7 @@
   <!-- Include ros_control launch file to load joint position controllers -->
   <include file="$(find rrbot_control)/launch/rrbot_control.launch" />
 
-  <!-- Create node to control joint positions -->
+  <!-- Create node to control joint positions using joint controller -->
   <node name="joint_positions_node" pkg="mini_project" type="position_controller.py" output="screen" respawn="true" />
 
 
