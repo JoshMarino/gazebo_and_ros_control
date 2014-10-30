@@ -24,34 +24,29 @@ We followed three main tutorials in order to understand how the pieces fit toget
 #### Tutorial Changes for ROS Indigo ####
 The only change we found from following the third tutorial on ROS Control, was the following in 'rrbot.xacro':
 
->  <transmission name="tran1">
->>    <type>transmission_interface/SimpleTransmission</type>
+```
+  <transmission name="tran1">
+    <type>transmission_interface/SimpleTransmission</type>
+    **<joint name="joint1">**
+      **<hardwareInterface>EffortJointInterface</hardwareInterface>**
+    **</joint>**
+    <actuator name="motor1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
 
->>    **<joint name="joint1">**
->>>      **<hardwareInterface>EffortJointInterface</hardwareInterface>**
->>    **</joint>**
-
->>    <actuator name="motor1">
->>>      <hardwareInterface>EffortJointInterface</hardwareInterface>
-
->>>      <mechanicalReduction>1</mechanicalReduction>
->>    </actuator>
->  </transmission>
-
->  <transmission name="tran2">
->>    <type>transmission_interface/SimpleTransmission</type>
-
->>    **<joint name="joint2">**
->>>      **<hardwareInterface>EffortJointInterface</hardwareInterface>**
->>    **</joint>**
-
->>    <actuator name="motor2">
->>>      <hardwareInterface>EffortJointInterface</hardwareInterface>
-
->>>      <mechanicalReduction>1</mechanicalReduction>
->>    </actuator>
->  </transmission>
-
+  <transmission name="tran2">
+    <type>transmission_interface/SimpleTransmission</type>
+    **<joint name="joint2">**
+      **<hardwareInterface>EffortJointInterface</hardwareInterface>**
+    **</joint>**
+    <actuator name="motor2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+```
 
 #### Goals of Project ####
 There were two goals associated with this project:
