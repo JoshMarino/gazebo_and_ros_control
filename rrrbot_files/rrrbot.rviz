@@ -79,6 +79,11 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        link4:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
       Name: RobotModel
       Robot Description: robot_description
       TF Prefix: ""
@@ -109,14 +114,14 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.01
       Style: Flat Squares
-      Topic: /rrbot/laser/scan
+      Topic: /rrrbot/laser/scan
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
     - Class: rviz/Camera
       Enabled: true
       Image Rendering: background and overlay
-      Image Topic: /rrbot/camera1/image_raw
+      Image Topic: /rrrbot/camera1/image_raw
       Name: Camera
       Overlay Alpha: 0.5
       Queue Size: 2
