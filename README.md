@@ -22,30 +22,30 @@ We followed three main tutorials in order to understand how the pieces fit toget
 
 
 #### Tutorial Changes for ROS Indigo ####
-The only change we found from following the third tutorial on ROS Control, was the following in 'rrbot.xacro':
+The only change we found from following the third tutorial on ROS Control, was the following in `rrbot.xacro` lines 3-5 and 14-16, denoted with ****change****.
 
 ```
-  <transmission name="tran1">
-    <type>transmission_interface/SimpleTransmission</type>
-    **<joint name="joint1">**
-      **<hardwareInterface>EffortJointInterface</hardwareInterface>**
-    **</joint>**
-    <actuator name="motor1">
-      <hardwareInterface>EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-
-  <transmission name="tran2">
-    <type>transmission_interface/SimpleTransmission</type>
-    **<joint name="joint2">**
-      **<hardwareInterface>EffortJointInterface</hardwareInterface>**
-    **</joint>**
-    <actuator name="motor2">
-      <hardwareInterface>EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
+1)  <transmission name="tran1">
+2)    <type>transmission_interface/SimpleTransmission</type>
+3)    **<joint name="joint1">**
+4)      **<hardwareInterface>EffortJointInterface</hardwareInterface>**
+5)    **</joint>**
+6)    <actuator name="motor1">
+7)      <hardwareInterface>EffortJointInterface</hardwareInterface>
+8)      <mechanicalReduction>1</mechanicalReduction>
+9)    </actuator>
+10)  </transmission>
+11)
+12)  <transmission name="tran2">
+13)    <type>transmission_interface/SimpleTransmission</type>
+14)    **<joint name="joint2">**
+15)      **<hardwareInterface>EffortJointInterface</hardwareInterface>**
+16)    **</joint>**
+17)    <actuator name="motor2">
+18)      <hardwareInterface>EffortJointInterface</hardwareInterface>
+19)      <mechanicalReduction>1</mechanicalReduction>
+20)    </actuator>
+21)  </transmission>
 ```
 
 #### Goals of Project ####
