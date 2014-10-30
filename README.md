@@ -13,11 +13,17 @@ Determine the relationship between Gazebo, ROS, ROS control, and ROS controllers
 
 
 #### Useful Tutorials ####
-We followed three main tutorials in order to understand how the pieces fit together. The first tutorial on "Using a URDF in Gazebo" described the required and optional sections of a URDF.
+We followed three main tutorials in order to understand how the pieces fit together. These tutorials relied upon the [RRBot github repo](https://github.com/ros-simulation/gazebo_ros_demos.git).
 
 1. [Using a URDF in Gazebo](http://gazebosim.org/tutorials/?tut=ros_urdf")
 2. [Using Gazebo plugins with ROS](http://gazebosim.org/tutorials?tut=ros_gzplugins)
 3. [ROS Control](http://gazebosim.org/tutorials/?tut=ros_control)
+
+The first tutorial on "Using a URDF in Gazebo" described the required and optional sections of a URDF. It then went onto explaining the `rrbot.xacro` file to help build the URDF.
+
+Using Gazebo plugins with ROS tutorial talked about plugins available in gazebo_plugins. Two plugins for the camera and hokuyo laser were explained in the `rrbot.gazebo` file.
+
+Last, in the ROS Control tutorial, ros_control with a gazebo plug-in was used to simulate a robot's controllers. A .yaml configuratiom file was first described within a roslaunch file loading the ros parameters. Next, the launch file was roslaunched and the position of the joints was controlled by publishing to their corresponding topic and through using rqt_gui.
 
 
 
