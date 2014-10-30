@@ -17,7 +17,7 @@
   <include file="$(find rrbot_control)/launch/rrbot_control.launch" />
 
   <!-- Create node to control joint positions using joint controller -->
-  <node name="joint_positions_node" pkg="mini_project" type="position_controller.py" output="screen" respawn="true" />
+  <node name="joint_positions_node" pkg="gazebo_and_ros_control" type="position_controller.py" output="screen" respawn="true" />
 
 
 </launch>

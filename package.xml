@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>mini_project</name>
+  <name>gazebo_and_ros_control</name>
   <version>0.0.0</version>
   <description>The mini_project package</description>
 
