@@ -22,14 +22,14 @@ We followed three main tutorials in order to understand how the pieces fit toget
 
 
 #### Tutorial Changes for ROS Indigo ####
-The only change we found from following the third tutorial on ROS Control, was the following in `rrbot.xacro` lines 3-5 and 14-16, denoted with ****change****.
+The only change we found from following the third tutorial on ROS Control, was the following in `rrbot.xacro` lines 3-5 and 14-16, denoted with ***change***.
 
 ```
 1)  <transmission name="tran1">
 2)    <type>transmission_interface/SimpleTransmission</type>
-3)    **<joint name="joint1">**
-4)      **<hardwareInterface>EffortJointInterface</hardwareInterface>**
-5)    **</joint>**
+3)    ***<joint name="joint1">***
+4)      ***<hardwareInterface>EffortJointInterface</hardwareInterface>***
+5)    ***</joint>***
 6)    <actuator name="motor1">
 7)      <hardwareInterface>EffortJointInterface</hardwareInterface>
 8)      <mechanicalReduction>1</mechanicalReduction>
@@ -38,9 +38,9 @@ The only change we found from following the third tutorial on ROS Control, was t
 11)
 12)  <transmission name="tran2">
 13)    <type>transmission_interface/SimpleTransmission</type>
-14)    **<joint name="joint2">**
-15)      **<hardwareInterface>EffortJointInterface</hardwareInterface>**
-16)    **</joint>**
+14)    ***<joint name="joint2">***
+15)      ***<hardwareInterface>EffortJointInterface</hardwareInterface>***
+16)    ***</joint>***
 17)    <actuator name="motor2">
 18)      <hardwareInterface>EffortJointInterface</hardwareInterface>
 19)      <mechanicalReduction>1</mechanicalReduction>
