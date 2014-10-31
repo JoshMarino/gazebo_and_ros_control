@@ -1,9 +1,11 @@
 <launch>
 
+  <arg name="torque" default="false"/>
+  <arg name="position" default="false"/>
+
 
   <!-- Load the URDF into the ROS Parameter Server -->
-  <param name="robot_description"
-    command="$(find xacro)/xacro.py '$(find rrrbot_files)/rrrbot.xacro'" />
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find rrrbot_files)/rrrbot.xacro'" />
 
   <!-- Show in Rviz   -->
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find rrrbot_files)/rrrbot.rviz"/>
@@ -13,11 +15,23 @@
   <!-- Include gazebo launch file rrbot_world.launch -->
   <include file="$(find rrrbot_files)/rrrbot_world.launch" />
 
-  <!-- Include ros_control launch file to load joint position controllers -->
-  <include file="$(find rrrbot_files)/rrrbot_control.launch" />
+  <!-- Run joint position controllers if true -->
+  <group if="$(arg position)">
+    <!-- Include ros_control launch file to load joint position controllers -->
+    <include file="$(find rrrbot_files)/rrrbot_control.launch" />
 
-  <!-- Create node to control joint positions using joint controller -->
-  <node name="rrrbot_joint_positions_node" pkg="rrrbot_files" type="rrrbot_position_controller.py" output="screen" respawn="true" />
+    <!-- Create node to control joint positions using joint controller -->
+    <node name="rrrbot_joint_positions_node" pkg="rrrbot_files" type="rrrbot_position_controller.py" output="screen" respawn="true" />
+  </group>
+
+  <!-- Run joint torque controllers if true -->
+  <group if="$(arg torque)">
+    <!-- Include ros_control launch file to load joint position controllers -->
+    <include file="$(find rrrbot_files)/torque_control/rrrbot_torque_control.launch" />
+
+    <!-- Create node to control joint positions using joint controller -->
+    <node name="rrrbot_joint_torques_node" pkg="rrrbot_files" type="rrrbot_torques_controller.py" output="screen" respawn="true" />
+  </group>
 
 
 </launch>
