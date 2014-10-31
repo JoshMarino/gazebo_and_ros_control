@@ -1,0 +1,23 @@
+<launch>
+
+
+  <!-- Load the URDF into the ROS Parameter Server -->
+  <param name="robot_description"
+    command="$(find xacro)/xacro.py '$(find rrbot_description)/urdf/rrbot.xacro'" />
+
+  <!-- Show in Rviz   -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find rrbot_description)/launch/rrbot.rviz"/>
+
+
+
+  <!-- Include gazebo launch file rrbot_world.launch -->
+  <include file="$(find rrbot_gazebo)/launch/rrbot_world.launch" />
+
+  <!-- Include ros_control launch file to load joint position controllers -->
+  <include file="$(find rrbot_control)/launch/rrbot_control.launch" />
+
+  <!-- Create node to control joint positions using joint controller -->
+  <node name="joint_positions_node" pkg="rrbot_files" type="position_controller.py" output="screen" respawn="true" />
+
+
+</launch>
