@@ -19,6 +19,8 @@ We followed three main tutorials in order to understand how the pieces fit toget
 2. [Using Gazebo plugins with ROS](http://gazebosim.org/tutorials?tut=ros_gzplugins)
 3. [ROS Control](http://gazebosim.org/tutorials/?tut=ros_control)
 
+The Gazebo website (http://gazebosim.org/) has many more useful tutorials with a variaty of robot simulation models, and a helpful troubleshooting link with answers to common problems (https://bitbucket.org/osrf/gazebo/wiki/troubleshooting).
+
 The first tutorial on "Using a URDF in Gazebo" described the required and optional sections of a URDF. It then went onto explaining the `rrbot.xacro` file to help build the URDF.
 
 Using Gazebo plugins with ROS tutorial talked about plugins available in gazebo_plugins. Two plugins for the camera and hokuyo laser were explained in the `rrbot.gazebo` file.
@@ -60,6 +62,8 @@ There were two goals associated with this project:
 1. Create a ROS package that provides a launch file to properly start Gazebo and RViz with the RRBot model loaded. Start a node that sets some PID gains for the joint controllers and creates publishers to have the joints follow sin (i/100).
 2. Modify the RRBot definition to add a third link, ie. make it a RRRBot. Leave the camera and laser at the end of the last link. Modify the above node to use the new RRRBot.
 
+#####Goal 1#####
+The three tutorials on the 
 
 #### Project Extensions ####
 Possible project extensions include:
