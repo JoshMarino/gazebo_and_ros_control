@@ -27,6 +27,7 @@ The first tutorial begins with some prerequisites before it dives into the URDF 
 
 Another issue that you will face when following the prereq steps is parsing URDF files in Indigo. The answer to this issue can be found [here](http://wiki.ros.org/urdf) under "New in Indigo", section 5.1 Verification. You will need to run 
 >sudo apt-get install liburdfdom-tools 
+
 in order to parse URDF files in Indigo. 
 
 Using Gazebo plugins with ROS tutorial talked about plugins available in gazebo_plugins. Two plugins for the camera and hokuyo laser were explained in the `rrbot.gazebo` file.
