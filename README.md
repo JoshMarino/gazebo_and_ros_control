@@ -19,9 +19,15 @@ We followed three main tutorials in order to understand how the pieces fit toget
 2. [Using Gazebo plugins with ROS](http://gazebosim.org/tutorials?tut=ros_gzplugins)
 3. [ROS Control](http://gazebosim.org/tutorials/?tut=ros_control)
 
-The Gazebo website (http://gazebosim.org/) has many more useful tutorials with a variaty of robot simulation models, and a helpful troubleshooting link with answers to common problems (https://bitbucket.org/osrf/gazebo/wiki/troubleshooting).
+The [Gazebo website](http://gazebosim.org/) has many more useful tutorials with a variaty of robot simulation models, and a helpful [troubleshooting](https://bitbucket.org/osrf/gazebo/wiki/troubleshooting) link with answers to common problems .
 
-The first tutorial on "Using a URDF in Gazebo" described the required and optional sections of a URDF. It then went onto explaining the `rrbot.xacro` file to help build the URDF.
+The first tutorial on "Using a URDF in Gazebo" describes the required and optional sections of a URDF. It then goes onto explaining the `rrbot.xacro` file to help build the URDF.
+
+The first tutorial begins with some prerequisites before it dives into the URDF usage in Gazebo. If you have already done a full ROS install on your computer, you do not need to install Gazebo. The full install will install a version of Gazebo (in my instance Gazebo 2.0) on your system. Installing Gazebo again will create dependancy conflicts within your catkin workspace.This issue will manifest itself only when you are rebuilding your workspace after downloading, cloning, or creating new packages. 
+
+Another issue that you will face when following the prereq steps is parsing URDF files in Indigo. The answer to this issue can be found [here](http://wiki.ros.org/urdf) under "New in Indigo", section 5.1 Verification. You will need to run 
+>sudo apt-get install liburdfdom-tools 
+in order to parse URDF files in Indigo. 
 
 Using Gazebo plugins with ROS tutorial talked about plugins available in gazebo_plugins. Two plugins for the camera and hokuyo laser were explained in the `rrbot.gazebo` file.
 
