@@ -23,6 +23,14 @@ The [Gazebo website](http://gazebosim.org/) has many more useful tutorials with 
 
 The first tutorial on "Using a URDF in Gazebo" describes the required and optional sections of a URDF. It then goes onto explaining the `rrbot.xacro` file to help build the URDF.
 
+The second tutorial, "using Gazebo plugins with ROS", indroduces several plugins available in gazebo_plugins. These plugis are what enable URDFs to to be used in the Gazebo environement. Two plugins for the camera and hokuyo laser were explained in the `rrbot.gazebo` file.
+
+The third tutorial, "ROS Control", briefly covers the data flow between ros_control and gazebo.  It then delves into using ros_control with a gazebo plug-in to simulate a robot's controllers. A .yaml configuratiom file is first described within a roslaunch file loading the ros parameters. Next, the launch file is roslaunched and the position of the joints are controlled by publishing to their corresponding topic and through using rqt_gui.
+
+
+
+#### Tutorial Changes for ROS Indigo ####
+
 The first tutorial begins with some prerequisites before it dives into the URDF usage in Gazebo. If you have already done a full ROS install on your computer, you do not need to install Gazebo. The full install will install a version of Gazebo (in my instance Gazebo 2.0) on your system. Installing Gazebo again will create dependancy conflicts within your catkin workspace.This issue will manifest itself only when you are rebuilding your workspace after downloading, cloning, or creating new packages. 
 
 Another issue that you will face when following the prereq steps is parsing URDF files in Indigo. The answer to this issue can be found [here](http://wiki.ros.org/urdf) under "New in Indigo", section 5.1 Verification. You will need to run 
@@ -30,14 +38,7 @@ Another issue that you will face when following the prereq steps is parsing URDF
 
 in order to parse URDF files in Indigo. 
 
-Using Gazebo plugins with ROS tutorial talked about plugins available in gazebo_plugins. Two plugins for the camera and hokuyo laser were explained in the `rrbot.gazebo` file.
-
-Last, in the ROS Control tutorial, ros_control with a gazebo plug-in was used to simulate a robot's controllers. A .yaml configuratiom file was first described within a roslaunch file loading the ros parameters. Next, the launch file was roslaunched and the position of the joints was controlled by publishing to their corresponding topic and through using rqt_gui.
-
-
-
-#### Tutorial Changes for ROS Indigo ####
-The only change we found from following the third tutorial on ROS Control, was the following in `rrbot.xacro` lines 3-5 and 14-16, denoted with ##change##.
+In order to successfuly complete the thrid tutorial on ROS Control in Indigo, an adjustment needs to be made in the  `rrbot.xacro` files. The ammendments are shown below in lines 3-5 and 14-16, denoted with ##change##.
 
 ```
 1)  <transmission name="tran1">
@@ -70,11 +71,17 @@ There were two goals associated with this project:
 2. Modify the RRBot definition to add a third link, ie. make it a RRRBot. Leave the camera and laser at the end of the last link. Modify the above node to use the new RRRBot.
 
 #####Goal 1#####
-The three tutorials on the 
+The three tutorials provide the basic building blocks needed to accomplish goal 1. A complete ROS package that starts gazebo and rviz with the RRBot will require a package.xml, a .xacro file used to simplify the robot URDF file, .gazebo and .rviz files to load your robot in the gazebo and rviz simulate and visualise your robot in ROS, .yaml file to incorporate parameters not supported by URDF, an executable .py with the appropriate node definition, and a launch file. The .xacro, .gazebo and .rviz files can be made using the tutorial as a guide. 
+
+#####Goal 2#####
+The second goal was to modify the RRBot to an RRRBot, essentially adding an extra link between the previous last link and the camera and laser links. To do this, the .gazebo, .rviz, and .xacro files need to be modified  to account for the new link and joint pair. The .yaml file should be updated to have a controller for the new added joint. The python node needs to publish this new controller command to the new joint. If these changes are made correctly and uniformly, the robot can be extended to as many links as possible with the desired combination of parent and child links. 
 
 #### Project Extensions ####
-Possible project extensions include:
+There are many exciting extensions to this project. ROS_control and gazebo have many capabilities worth exploring. We attempted and succeeded in completing the following extensions: 
 
 * Change the RRRBot to use torque control instead of position control. Write a node that stabalizes the RRRBot to a non-equilibrium configuration.
 * Change the RRRBot to use a joint_trajectory_controller. Use this controller to have the RRRBot stabilize to a trajectory.
-* Use the joint position controller to have the RRRBot stabilize to a trajectory defined for the end-effector. For example, the end-effector can move vertically up and down while mantaining a constant orientation.
+
+#####Torque Control#####
+In order to include torque control, two main changes need to be made to the existing package. 
+
