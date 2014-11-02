@@ -74,6 +74,31 @@ There were two goals associated with this project:
 The three tutorials provide the basic building blocks needed to accomplish goal 1. A complete ROS package that starts gazebo and rviz with the RRBot will require a package.xml, a [.xacro](http://wiki.ros.org/xacro) file used to simplify the robot URDF file and load  , .gazebo and .rviz files to load your robot in the gazebo and rviz simulate and visualise your robot in ROS, .yaml file to incorporate parameters not supported by URDF, an executable .py with the appropriate node definition, and a launch file. 
 The .xacro, .gazebo and .rviz files can be made using this [tutorial](http://gazebosim.org/tutorials/?tut=ros_control) as a guide. 
 
+1. Step one: 
+First we need to create a configuration file that will contain all parameters that are necessary for our controller. The following code is saved in the .yaml file: 
+---
+#this file represents the controller being used
+rrrbot:
+  # Publish all joint states -----------------------------------
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50  
+  
+  # Position Controllers ---------------------------------------
+  joint1_position_controller:
+    type: position_controllers/JointPositionController
+    joint: joint1
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+  joint2_position_controller:
+    type: position_controllers/JointPositionController
+    joint: joint2
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+  joint3_position_controller:
+    type: position_controllers/JointPositionController
+    joint: joint3
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+---
+
 1. Xacro file: 
 The base for interfacing Gazebo and ros_control is the .xacro file. This file will contain all the necessary descriptions to essentially 'build' your robot in the Gazebo world. It accounts for every single joint and link that make up the robot, in which cameras and any attachment is considered a link, and all links are connected via joints. The URDF [links](http://wiki.ros.org/urdf/XML/link) and [joints](http://wiki.ros.org/urdf/XML/joint) must be sufficiently defined in order for Gazebo and Rvis to 'realise' the robot. The transmission_interface and hardware_interface for each joint-actuator pair are also defined here. The Transmission type used in our code is a Simple Reduction Transmission, although depending on the actuator-joint relationship, other transmission methods can be set here. 
 
