@@ -77,7 +77,7 @@ The .xacro, .gazebo and .rviz files can be made using this [tutorial](http://gaz
 1. Step one: 
 First we need to create a configuration file that will contain all parameters that are necessary for our controller. 
 
-,,,
+```
 #this file represents the controller being used
 rrrbot:
   # Publish all joint states -----------------------------------
@@ -98,7 +98,7 @@ rrrbot:
     type: position_controllers/JointPositionController
     joint: joint3
     pid: {p: 100.0, i: 0.01, d: 10.0}
-,,,
+```
 
 1. Xacro file: 
 The base for interfacing Gazebo and ros_control is the .xacro file. This file will contain all the necessary descriptions to essentially 'build' your robot in the Gazebo world. It accounts for every single joint and link that make up the robot, in which cameras and any attachment is considered a link, and all links are connected via joints. The URDF [links](http://wiki.ros.org/urdf/XML/link) and [joints](http://wiki.ros.org/urdf/XML/joint) must be sufficiently defined in order for Gazebo and Rvis to 'realise' the robot. The transmission_interface and hardware_interface for each joint-actuator pair are also defined here. The Transmission type used in our code is a Simple Reduction Transmission, although depending on the actuator-joint relationship, other transmission methods can be set here. 
