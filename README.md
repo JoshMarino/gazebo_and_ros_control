@@ -75,7 +75,7 @@ The three tutorials provide the basic building blocks needed to accomplish goal 
 The .xacro, .gazebo and .rviz files can be made using this [tutorial](http://gazebosim.org/tutorials/?tut=ros_control) as a guide. 
 
 1. Step one: 
-First we need to create a configuration file that will contain all parameters that are necessary for our controller. 
+First we need to create a configuration file that will contain all parameters that are necessary for our controller. The following is the configuration residing in the .yaml file:
 
 ```
 #this file represents the controller being used
@@ -99,6 +99,7 @@ rrrbot:
     joint: joint3
     pid: {p: 100.0, i: 0.01, d: 10.0}
 ```
+The .yaml file is where the controller type is defined. Multiple controllers can be defined in a single .yaml file. When this file contains more than one controller, the ros_control controller_manager can be used to toggle between the different controllers. A sufficient controller definition will require the type of controller(actuation method), the joint it is acting upon, and the gains of the controller (in our case, a common PID controller). Other parameters can be defined in the .yaml. It is of importance to note that when interfacing Gazebo and ros_control, the joint_state_controller paramter must also be defined here. The transmission_interface isn't necissary for simulation in Gazebo, it's importance becomes aparent when you want to control your robot. 
 
 1. Xacro file: 
 The base for interfacing Gazebo and ros_control is the .xacro file. This file will contain all the necessary descriptions to essentially 'build' your robot in the Gazebo world. It accounts for every single joint and link that make up the robot, in which cameras and any attachment is considered a link, and all links are connected via joints. The URDF [links](http://wiki.ros.org/urdf/XML/link) and [joints](http://wiki.ros.org/urdf/XML/joint) must be sufficiently defined in order for Gazebo and Rvis to 'realise' the robot. The transmission_interface and hardware_interface for each joint-actuator pair are also defined here. The Transmission type used in our code is a Simple Reduction Transmission, although depending on the actuator-joint relationship, other transmission methods can be set here. 
@@ -108,7 +109,7 @@ In order to control your robot, we also need a control pluggin. We used the basi
 >     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
 
 3. Yaml file: 
-The .yaml file is where the controller type is defined. Multiple controllers can be defined in a single .yaml file. When this file contains more than one controller, the ros_control controller_manager can be used to toggle between the different controllers. A sufficient controller definition will require the type of controller(actuation method), the joint it is acting upon, and the gains of the controller (in our case, a common PID controller). Other parameters can be defined in the .yaml. It is of importance to note that when interfacing Gazebo and ros_control, the joint_state_controller paramter must also be defined here. The transmission_interface isn't necissary for simulation in Gazebo, it's importance becomes aparent when you want to control your robot. 
+
 
 
 #####Goal 2#####
