@@ -63,6 +63,8 @@ In order to successfuly complete the thrid tutorial on ROS Control in Indigo, an
 20)    </actuator>
 21)  </transmission>
 ```
+#####How do Gazebo, ROS control, and ROS controllers work together?#####
+
 
 #### Goals of Project ####
 There were two goals associated with this project:
@@ -71,7 +73,13 @@ There were two goals associated with this project:
 2. Modify the RRBot definition to add a third link, ie. make it a RRRBot. Leave the camera and laser at the end of the last link. Modify the above node to use the new RRRBot.
 
 #####Goal 1#####
-The three tutorials provide the basic building blocks needed to accomplish goal 1. A complete ROS package that starts gazebo and rviz with the RRBot will require a package.xml, a [.xacro](http://wiki.ros.org/xacro) file used to simplify the robot URDF file and load  , .gazebo and .rviz files to load your robot in the gazebo and rviz simulate and visualise your robot in ROS, .yaml file to incorporate parameters not supported by URDF, an executable .py with the appropriate node definition, and a launch file. 
+The three tutorials provide the basic building blocks needed to accomplish goal 1. A complete ROS package that starts gazebo and rviz with the RRBot will require:
+
+1. a package.xml with the subscriber/publisher node definition.
+2. a [.xacro](http://wiki.ros.org/xacro) file used to simplify the robot URDF file and load. 
+3. .gazebo and .rviz files to load your robot in the gazebo and rviz simulate and visualise your robot in ROS.
+4. .yaml file to incorporate parameters not supported by URDF, an executable .py with the appropriate node definition, and a launch file. 
+
 The .xacro, .gazebo and .rviz files can be made using this [tutorial](http://gazebosim.org/tutorials/?tut=ros_control) as a guide. 
 
 1.Step one: 
