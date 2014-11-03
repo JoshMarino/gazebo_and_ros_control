@@ -169,7 +169,7 @@ if __name__ == '__main__':
 	try: rrbot_joint_positions_publisher()
 	except rospy.ROSInterruptException: pass
 	
-	```	
+```	
 
 4. Step four: 
 In order to control your robot in Gazebo, we also need a control pluggin. We used the basic control pluggin: 
