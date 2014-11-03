@@ -39,7 +39,7 @@
 
 
   <!-- Run joint torque controllers for added mass at end if true -->
-  <group if="$(arg torque)">
+  <group if="$(arg torque_extension)">
     <!-- Include ros_control launch file to load joint torque controllers -->
     <include file="$(find rrrbot_files)/torque_control/rrrbot_torque_control.launch" />
 
