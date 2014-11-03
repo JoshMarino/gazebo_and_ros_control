@@ -10,7 +10,7 @@ Josh Marino and Mahdieh Nejati
 
 
 #### Project Overview ####
-ROS_control is an exciting new development in the world of ROS, created and maintained by Adolfo Rodriquez Tsouroukdissian. As with any ROS package, the documentaion on different ascpects of this multi-faceted package are lacking and dependant on the ROS communities' implementation and subsequent documentation. The purpose of this project was to understand how ROS_control and the world of Gazebo can communicate together in order to simulate robot actuation and sensing mechanisms. Specifically, we wanted to understand
+ROS_control is an exciting new development in the world of ROS, created and maintained by Adolfo Rodriquez Tsouroukdissian and maintained by him <adolfo.rodriguez@pal-robotics.com>, Dave Coleman <davetcoleman@gmail.com>, and Wim Meeussen <wim@hidof.com>. As with any ROS package, the documentaion on different ascpects of this multi-faceted package are lacking and dependant on the ROS communities' implementation and subsequent documentation. The purpose of this project was to understand how ROS_control and the world of Gazebo can communicate together in order to simulate robot actuation and sensing mechanisms. Specifically, we wanted to understand
 
 1. How ROS controllers and ROS control work.
 2. Using the RRBot model, how do we use ROS controllers to simulate a robot in Gazebo.
@@ -551,11 +551,12 @@ If these changes are made correctly and uniformly, the robot can be extended to 
 #### Project Extensions ####
 There are many exciting extensions to this project. ROS_control and gazebo have many capabilities worth exploring, and their intigration has not been fully documented yet. We attempted and succeeded in completing the following extensions: 
 
-	* Change the RRRBot to use torque control instead of position control. Write a node that stabalizes the RRRBot 	  to a non-equilibrium configuration.
-	* Balance the end-effector to a non-equilibrium configuration in the presence of an added mass. 
+* Change the RRRBot to use torque control instead of position control. Write a node that stabalizes the RRRBot to a non-equilibrium configuration.
+* Balance the end-effector to a non-equilibrium configuration in the presence of an added mass. 
 
 The following extension was investigated and attempted. However, we were not able to implement joint_trajectory_controller in Gazebo:
-	* Change the RRRBot to use a joint_trajectory_controller. Use this controller to have the RRRBot stabilize to 	  a trajectory.
+
+* Change the RRRBot to use a joint_trajectory_controller. Use this controller to have the RRRBot stabilize to 	  a trajectory.
 
 #####Torque Control#####
 In order to include torque control, two main changes need to be made to the existing package. We made this extension ny adding a new folder to our rrrbot_files package, called torque_control. This file contains the new .yaml file which generates torque commands of type JointEffortController instead of JointPositionController. With the new control command, the next addition is to create a publisher node that sends messages to the topic [JointEffortControl](http://wiki.ros.org/robot_mechanism_controllers/JointEffortController). This will work on it's own, however it is better practice to interface with the controller via it's [action interface](http://wiki.ros.org/joint_trajectory_action). 
