@@ -138,7 +138,7 @@ Nest we need to create a launch file that will load controller parameters to the
 The launch file calls the node joint_positions_node, which will publish the desired position message to the Float64 topic.  It also includes the ros_control launch file to load the joint_position_controllers controllers pluggin. 
 
 3. Step three: 
-Next we need to define a node that will publish the correct message to the Float64 topic which is interpreted by ros_control controller as a desired position. For the purpose of this project, we wanted all our joints to follow a sinusoidal motion sin \big(\frac{i}{100} ). 
+Next we need to define a node that will publish the correct message to the Float64 topic which is interpreted by ros_control controller as a desired position. For the purpose of this project, we wanted all our joints to follow a sinusoidal motion ![Image](<img src="" align="center" border="0" alt="sin \big(\frac{i}{100} )  " width="81" height="43" />?raw=true) 
 ```
 #!/usr/bin/env python
 
