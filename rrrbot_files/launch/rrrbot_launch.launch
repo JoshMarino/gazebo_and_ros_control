@@ -10,7 +10,7 @@
   <param name="robot_description" command="$(find xacro)/xacro.py '$(find rrrbot_files)/rrrbot.xacro'" />
 
   <!-- Show in Rviz   -->
-  <!--node name="rviz" pkg="rviz" type="rviz" args="-d $(find rrrbot_files)/rrrbot.rviz"/-->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find rrrbot_files)/rrrbot.rviz"/>
 
 
 
