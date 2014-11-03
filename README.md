@@ -195,3 +195,4 @@ In order to include torque control, two main changes need to be made to the exis
 #####Joint_Trajectory_Controller#####
 The joint_trajectory_controller is a bit more tricky to implement than the previous controllers. The trajectory controller takes in a trajectory control command and sends command to a position interface. 
 The JointTrajectoryController executes joint-space trajectories on a set of joints.
+The joint_trajectory_controller works a bit differently than the two previous controllers that were implemented.To send position commands via the joint_position_controller and torque commands via the joint_effort_controller, one need only send messages to a single topic. Contrarily, trajectory commands are sent in the form of the  [trajectory_msgs/JointTrajectory](http://docs.ros.org/api/trajectory_msgs/html/msg/JointTrajectory.html) message primarily by means of the action interface, and may also be sent by means of the topic interface. 
