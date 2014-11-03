@@ -441,14 +441,19 @@ Every new catkin package requires its own package.xml file:
 ```
 and CMakeLists.txt. 
 
-In our subpackage, we created new .xacro, .gazebo, .yaml, _control.launch and _world.launch files to work with the RRRBot. 
+Additionaly, for our new sub-package we modified our previous files to work with the RRRBot definition: 
+	* .xacro
+	* .gazebo
+	* .yaml
+	* _control.launch 
+	* _world.launch 
+	
+Essentially rrbot was modified to rrrbot, and the package name and file path were amended.
+
 The one thing that does not require any change is the name of the world to be launched. This part in the _world.launch file remains the same: ' <arg name="world_name" value="$(find rrbot_gazebo)/worlds/rrbot.world"/>'.
 
-For all other files, rrbot was modified to rrrbot, and the package name and file path were amended. 
-
-1. Step 1: 
-To create an extra link, the robot definition has to be modified. This will require updating the .gazebo, .rviz, and .xacro files to account for the new link and joint pair.
-
+*1) Step one:*
+To create an extra link, the robot definitiona have to be modified in the package files. The .gazebo file is updated with the new link definition: 
 ```
   <!-- Link4 -->
   <gazebo reference="link4">
@@ -457,8 +462,19 @@ To create an extra link, the robot definition has to be modified. This will requ
     <material>Gazebo/Orange</material>
   </gazebo>
 ```
-Note that for each link addition, a joint must also be added.
+The .xacro file accounts for link-joint pairs, and the actuators. So for each link addition, a joint must also be added: 
 
+New link definition:
+```
+  <link name="link4">
+    <collision>
+      <origin xyz="0 0 ${height4/2 - axel_offset}" rpy="0 0 0"/>
+      <geometry>
+	<box size="${width} ${width} ${height4}"/>
+      </geometry>
+    </collision>
+```
+New joint definition: 
 ```
   <joint name="joint3" type="continuous">
     <parent link="link3"/>
@@ -468,7 +484,6 @@ Note that for each link addition, a joint must also be added.
     <dynamics damping="2.0"/>
   </joint>
 ```
-
 The parent link for the camera and hokuyu laser joints must be modified. The modification is denoted with ###change###.
 
 Hokuyu laser scanner:
@@ -490,7 +505,6 @@ Camera:
   </joint>
 ```
 A new transmission needs to be added to account for the actuation of the added joint3: 
-
 ```
   <transmission name="tran3">
     <type>transmission_interface/SimpleTransmission</type>
@@ -502,9 +516,8 @@ A new transmission needs to be added to account for the actuation of the added j
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  
-  ```
-2. Step 2: 
+   ```
+*2) Step two:* 
 Now that we have an added transmission_interface for the extra joint, we need to define a new controller. Remember that controllers are specified in the .yaml file: 
 ```
  joint3_position_controller:
@@ -512,7 +525,7 @@ Now that we have an added transmission_interface for the extra joint, we need to
     joint: joint3
     pid: {p: 100.0, i: 0.01, d: 10.0}
 ```
-3. Step 3: 
+*3. Step three:* 
 The new joint3_position_controller is loaded into the parameter server alongside the previous controllers. This controller is added to the controller_manager's list, denoted by ###addition###, to be loaded and started by the spawner tool. 
 ```
 <!-- load the controllers -->
@@ -522,28 +535,32 @@ The new joint3_position_controller is loaded into the parameter server alongside
 					  joint2_position_controller
 					  ###joint3_position_controller"/>###
 ```
-
-4)Step 4: 
-The python node needs to publish the control command messages from this added actuator to the new joint.
+*4) Step four:*
+The python node needs to publish the control command messages from the added actuator to the new joint.
 
 > pub3 = rospy.Publisher('/rrrbot/joint3_position_controller/command', Float64, queue_size=10)
 
 > pub3.publish(sine_movement)
 
-5)Step 5: 
+*5) Step 5:*
 Now you can launch the simulation of the robot in gazebo: `roslaunch rrrbot_files rrrbot_launch.launch position:=true`
 The command should load the RRBot in Gazebo and Rviz. 
 
 If these changes are made correctly and uniformly, the robot can be extended to as many links as possible with the desired combination of parent and child links, actuation methods and controllers. 
 
 #### Project Extensions ####
-There are many exciting extensions to this project. ROS_control and gazebo have many capabilities worth exploring. We attempted and succeeded in completing the following extensions: 
+There are many exciting extensions to this project. ROS_control and gazebo have many capabilities worth exploring, and their intigration has not been fully documented yet. We attempted and succeeded in completing the following extensions: 
 
-* Change the RRRBot to use torque control instead of position control. Write a node that stabalizes the RRRBot to a non-equilibrium configuration.
-* Change the RRRBot to use a joint_trajectory_controller. Use this controller to have the RRRBot stabilize to a trajectory.
+	* Change the RRRBot to use torque control instead of position control. Write a node that stabalizes the RRRBot 	  to a non-equilibrium configuration.
+	* Balance the end-effector to a non-equilibrium configuration in the presence of an added mass. 
+
+The following extension was investigated and attempted. However, we were not able to implement joint_trajectory_controller in Gazebo:
+	* Change the RRRBot to use a joint_trajectory_controller. Use this controller to have the RRRBot stabilize to 	  a trajectory.
 
 #####Torque Control#####
 In order to include torque control, two main changes need to be made to the existing package. We made this extension ny adding a new folder to our rrrbot_files package, called torque_control. This file contains the new .yaml file which generates torque commands of type JointEffortController instead of JointPositionController. With the new control command, the next addition is to create a publisher node that sends messages to the topic [JointEffortControl](http://wiki.ros.org/robot_mechanism_controllers/JointEffortController). This will work on it's own, however it is better practice to interface with the controller via it's [action interface](http://wiki.ros.org/joint_trajectory_action). 
+
+(launch file added argument)
 
 #####Mass Balance#####
 This extension builds on the torque control of the arm. The goal was to balance the torque on the end effector, when an foreign mass is exterted on the end effecter. The greatest challenge with coding this extension is filtering through all the Gazebo link_state messages to find the onces that are applicable. Two changes were made to the main code. 
