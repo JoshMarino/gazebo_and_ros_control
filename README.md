@@ -1,15 +1,24 @@
-ME 495: Mini-Project - Gazebo and ROS Control
+Gazebo and ROS Control
 =============================================
 
-Josh Marino and Mahdieh Javaremi
---------------------------------
+ME 495:Embedded Systems in Robotics
+-----------------------------------
+mini project, Fall 2014, Northwestern Univeristy 
+-------------------------------------------------
+
+##Josh Marino and Mahdieh Nejati##
+
 
 
 ## Project Documentation ##
 
 
 #### Project Overview ####
-Determine the relationship between Gazebo, ROS, ROS control, and ROS controllers. This will be implemented using the RRBot model.
+ROS_control is an exciting new development in the world of ROS, created and maintained by Adolfo Rodriquez Tsouroukdissian. As with any ROS package, the documentaion on different ascpects of this multi-faceted package are lacking and dependant on the ROS communities' implementation and subsequent documentation. The purpose of this project was to understand how ROS_control and the world of Gazebo can communicate together in order to simulate robot actuation and sensing mechanisms. Specifically, we wanted to understand
+
+1. How ROS controllers and ROS control work.
+2. Using the RRBot model, how do we use ROS controllers to simulate a robot in Gazebo.
+3. What are the different ways to simulate robotic controllers in Gazebo. 
 
 
 #### Useful Tutorials ####
@@ -19,26 +28,25 @@ We followed three main tutorials in order to understand how the pieces fit toget
 2. [Using Gazebo plugins with ROS](http://gazebosim.org/tutorials?tut=ros_gzplugins)
 3. [ROS Control](http://gazebosim.org/tutorials/?tut=ros_control)
 
-The [Gazebo website](http://gazebosim.org/) has many more useful tutorials with a variaty of robot simulation models, and a helpful [troubleshooting](https://bitbucket.org/osrf/gazebo/wiki/troubleshooting) link with answers to common problems .
+The [Gazebo website](http://gazebosim.org/) has many more useful tutorials with a variaty of robot simulation models, and a helpful [troubleshooting](https://bitbucket.org/osrf/gazebo/wiki/troubleshooting) link with answers to common problems.
 
 The first tutorial on "Using a URDF in Gazebo" describes the required and optional sections of a URDF. It then goes onto explaining the `rrbot.xacro` file to help build the URDF.
 
-The second tutorial, "using Gazebo plugins with ROS", indroduces several plugins available in gazebo_plugins. These plugis are what enable URDFs to to be used in the Gazebo environement. Two plugins for the camera and hokuyo laser were explained in the `rrbot.gazebo` file.
+The second tutorial, "using Gazebo plugins with ROS", indroduces several plugins available in gazebo_plugins. These plugis are what enable URDFs to to be used in the Gazebo environement. Two plugins for the camera and hokuyo laser were explained in the `rrbot.gazebo` file, and used in our project. 
 
-The third tutorial, "ROS Control", briefly covers the data flow between ros_control and gazebo.  It then delves into using ros_control with a gazebo plug-in to simulate a robot's controllers. A .yaml configuratiom file is first described within a roslaunch file loading the ros parameters. Next, the launch file is roslaunched and the position of the joints are controlled by publishing to their corresponding topic and through using rqt_gui.
-
+The third tutorial, "ROS Control", briefly covers the data flow between ros_control and gazebo.  It then delves into using ros_control with a gazebo plug-in to simulate a robot's controllers. A .yaml configuratiom file is first described within a roslaunch file for loading the ROS parameters. Next, the launch file is roslaunched and the position of the joints are controlled by publishing to their corresponding topic and through using rqt_gui.
 
 
 #### Tutorial Changes for ROS Indigo ####
+* The first tutorial begins with some prerequisites before it dives into the URDF usage in Gazebo. If you have already   done a full ROS install on your computer, you do not need to install Gazebo. The full install will install a version   of Gazebo on your system. Installing Gazebo again will create dependancy conflicts within your catkin workspace.This   issue will manifest itself only when you are rebuilding your workspace after downloading, cloning, or creating new    packages. 
 
-The first tutorial begins with some prerequisites before it dives into the URDF usage in Gazebo. If you have already done a full ROS install on your computer, you do not need to install Gazebo. The full install will install a version of Gazebo (in my instance Gazebo 2.0) on your system. Installing Gazebo again will create dependancy conflicts within your catkin workspace.This issue will manifest itself only when you are rebuilding your workspace after downloading, cloning, or creating new packages. 
+* Another issue that you will face when following the prerequisite steps is parsing URDF files in Indigo. The answer    to this issue can be found [here](http://wiki.ros.org/urdf) under "New in Indigo" in section 5.1 "Verification". You   will need to run 
 
-Another issue that you will face when following the prereq steps is parsing URDF files in Indigo. The answer to this issue can be found [here](http://wiki.ros.org/urdf) under "New in Indigo", section 5.1 Verification. You will need to run 
->sudo apt-get install liburdfdom-tools 
+  > sudo apt-get install liburdfdom-tools 
 
-in order to parse URDF files in Indigo. 
+ in order to parse URDF files in Indigo. 
 
-In order to successfuly complete the thrid tutorial on ROS Control in Indigo, an adjustment needs to be made in the  `rrbot.xacro` files. The ammendments are shown below in lines 3-5 and 14-16, denoted with ##change##.
+* In order to successfuly complete the thrid tutorial on ROS Control in Indigo, an adjustment needs to be made in the   `rrbot.xacro` files. The ammendments are shown below in lines 3-5 and 14-16, denoted with ##change##.
 
 ```
 1)  <transmission name="tran1">
@@ -65,7 +73,7 @@ In order to successfuly complete the thrid tutorial on ROS Control in Indigo, an
 ```
 
 
-#####How do Gazebo, ROS control, and ROS controllers work together?#####
+**How do Gazebo, ROS control, and ROS controllers work together?**
 
 
 #### Goals of Project ####
@@ -74,18 +82,26 @@ There were two goals associated with this project:
 1. Create a ROS package that provides a launch file to properly start Gazebo and RViz with the RRBot model loaded. Start a node that sets some PID gains for the joint controllers and creates publishers to have the joints follow sin(i/100). 
 2. Modify the RRBot definition to add a third link, ie. make it a RRRBot. Leave the camera and laser at the end of the last link. Modify the above node to use the new RRRBot.
 
+**ROS package Dependancies**
+* Gazebo: The main ROS simulation environment. 
+* Rviz: 3D visualisation tool for ROS. 
+* ROS Indigo: Eighth ROS distribution release. 
+* [ros_control](https://github.com/ros-controls/ros_control): Controller framework for ROS
+* ros_controllers `sudo apt-get install ros-indigo-ros-control ros-indigo-ros-controllers`
 
 #####Goal 1#####
-The three tutorials provide the basic building blocks needed to accomplish goal 1. A complete ROS package that starts gazebo and rviz with the RRBot will require:
+The three tutorials provide the basic building blocks needed to accomplish the first goal. A complete ROS package that starts gazebo and rviz with the RRBot will require:
 
-1. a package.xml with the subscriber/publisher node definition.
+1. a package.xml and CMakeList file to build within the CatKin workskpace. 
 2. a [.xacro](http://wiki.ros.org/xacro) file used to simplify the robot URDF file and load. 
-3. .gazebo and .rviz files to load your robot in the gazebo and rviz simulate and visualise your robot in ROS.
-4. .yaml file to incorporate parameters not supported by URDF, an executable .py with the appropriate node definition, and a launch file. 
+3. .gazebo and .rviz files to load your robot in Gazebo and Rviz for robot simulation and visualisation in ROS.
+4. .yaml file to incorporate parameters not supported by URDF
+5. An executable .py with the appropriate subscriber/publisher node definition.
+6. A launch file. 
 
 The .xacro, .gazebo and .rviz files can be made using this [tutorial](http://gazebosim.org/tutorials/?tut=ros_control) as a guide. 
 
-1)Step one: 
+*1) Step one:*
 First we need to create a configuration file that will contain all parameters that are necessary for our controller. The following is the configuration residing in the .yaml file:
 
 ```
@@ -113,8 +129,9 @@ rrrbot:
 This gets loaded to the parameter server in the roslaunch file. The .yaml file is where the controller type is defined. Multiple controllers can be defined in a single .yaml file. When this file contains more than one controller, the ros_control [controller_manager](http://wiki.ros.org/controller_manager) in the parameter server can be used to toggle between the different controllers. 
 A sufficient controller definition will require the type of controller(actuation method), the joint it is acting upon, and the gains of the controller. For this project we used a PID controller since we could use the tutorial to tune the gains nicely for the RRBot. Other parameters can be defined in the .yaml. It is of importance to note that when interfacing Gazebo and ros_control, the joint_state_controller paramter must also be defined here. The transmission_interface isn't necissary for simulation in Gazebo, it's importance becomes aparent when you want to control your robot. 
 
-2)Step two: 
-Nest we need to create a launch file that will load controller parameters to the parameter server and start up the controller. The launch file will also startup the robot in the world of Gazebo Rviz. 
+*2) Step two:*
+Next we need to create a launch file that will load controller parameters to the parameter server and start up the controller. The launch file will also startup the robot in the world of Gazebo Rviz. 
+
 ```
 <launch>
 
@@ -138,8 +155,9 @@ Nest we need to create a launch file that will load controller parameters to the
 ```
 The launch file calls the node joint_positions_node, which will publish the desired position message to the Float64 topic.  It also includes the ros_control launch file to load the joint_position_controllers controllers pluggin. 
 
-3)Step three: 
-Next we need to define a node that will publish the correct message to the Float64 topic which is interpreted by ros_control controller as a desired position. For the purpose of this project, we wanted all our joints to follow a sinusoidal motion sin(i/100).
+*3) Step three:*
+Next we need to define a node that will publish the message of type [Float64](http://docs.ros.org/indigo/api/std_msgs/html/msg/Float64.html) which is interpreted by the ROS controller as the desired joint position. For the purpose of this project, we wanted all our joints to follow a sinusoidal motion sin(i/100).
+
 ```
 #!/usr/bin/env python
 
@@ -182,10 +200,15 @@ if __name__ == '__main__':
 	except rospy.ROSInterruptException: pass
 ```	
 
-4)Step four: 
-The base for interfacing Gazebo and ros_control is the .xacro file. This file will contain all the necessary descriptions to essentially 'build' your robot in the Gazebo world. It accounts for every single joint and link that make up the robot, in which cameras and any attachment is considered a link, and all links are connected via joints. The URDF [links](http://wiki.ros.org/urdf/XML/link) and [joints](http://wiki.ros.org/urdf/XML/joint) must be sufficiently defined in order for Gazebo and Rvis to 'realise' the robot. The transmission_interface and hardware_interface for each joint-actuator pair are also defined here. The Transmission type used in our code is a Simple Reduction Transmission, although depending on the actuator-joint relationship, other transmission methods can be set here. 
+*4) Step four:*
+The basis for interfacing Gazebo and ros_control is the .xacro file. This file will contain all the necessary descriptions to essentially 'build' your robot in the Gazebo world. It accounts for every single joint and link that make up the robot, in which cameras and any attachment is considered a link, and all links are connected via joints. The URDF [links](http://wiki.ros.org/urdf/XML/link) and [joints](http://wiki.ros.org/urdf/XML/joint) must be sufficiently defined in order for Gazebo and Rvis to 'realise' the robot.
 
-To simulate and visualize the robot in Gazebo and Rviz, the robot needs to be fully defined. 
+The transmission_interface and hardware_interface for each joint-actuator pair are also defined here. The Transmission type used in our code is a Simple Reduction Transmission, although depending on the actuator-joint relationship, other transmission methods can be set here. 
+
+To simulate and visualize the robot in Gazebo and Rviz, the links need to have three well-defined tags:
+ * collision
+ * visual
+ * interial
 ```
   <link name="link1">
     <collision>
@@ -226,14 +249,14 @@ Every link will need a joint pair for actuation purposes. Every joint connects t
   
 ```
 
-5)Step five: 
+*5) Step five:*
 In order to control your robot in Gazebo, several pluggins need to be added to the .gazebo file. For the controller pluggin we used the basic control pluggin: 
 
 >     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
 
 End-effectors will commonly have at least one and oftentimes multiple sensors. In our project, we have made use of the camera and hokuyu laser pluggins. 
-To use the hokuyo laser scanner, you need to:
 
+To use the hokuyo laser scanner, you need to:
 1. Define it as a link on the robot. A complete link definition will require the collision, visual and intertial definitions for the link. 
 
 ```
@@ -243,9 +266,7 @@ To use the hokuyo laser scanner, you need to:
       <pose>0 0 0 0 0 0</pose>
       <visualize>false</visualize>
       <update_rate>40</update_rate>
-      
 ```
-
 
 2. Specify the sampling rate and type of data and noise being measured. 
 
@@ -274,8 +295,8 @@ To use the hokuyo laser scanner, you need to:
           <stddev>0.01</stddev>
         </noise>
       </ray>
-
 ```
+
 3. Add an additional pluggin to control the hokuyo laser in gazebo. 
 
 ```
@@ -330,9 +351,8 @@ The same steps apply to the camera sensor.
       </plugin>
     </sensor>
   </gazebo> 
-
 ```
-6)Step 6: 
+*6) Step 6:*
 Now we need to create a launch file that will load the robot into the gazebo world. This file will send a service call to gazebo_ros to spawn the RRBot in the empty gazebo world. 
 
 ```
@@ -369,7 +389,7 @@ Now we need to create a launch file that will load the robot into the gazebo wor
 </launch>
 
 ```
-7)Step 7: 
+*7) Step 7:*
 The gazebo.launch file will look for what controller to use for actuating the joints. We create another launch file that specifies the cotroller to be used. This node uses the spawner tool in the  [controller_manager](http://wiki.ros.org/controller_manager) package to load and start the listed controllers.  
 
 ```
@@ -392,8 +412,9 @@ The gazebo.launch file will look for what controller to use for actuating the jo
 
 </launch>
 ```
-8)Step eight: 
-Now you can launch the simulation of the robot: `roslaunch rrbot_files mini_project.launch position:=true`.
+
+*8) Step eight:*
+Now you can launch the ros_controlled robot simulation in Gazebo: `roslaunch rrbot_files mini_project.launch position:=true`.
 The command should load the RRBot in Gazebo and Rviz. 
 
 #####Goal 2#####
