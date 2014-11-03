@@ -74,7 +74,7 @@ There were two goals associated with this project:
 The three tutorials provide the basic building blocks needed to accomplish goal 1. A complete ROS package that starts gazebo and rviz with the RRBot will require a package.xml, a [.xacro](http://wiki.ros.org/xacro) file used to simplify the robot URDF file and load  , .gazebo and .rviz files to load your robot in the gazebo and rviz simulate and visualise your robot in ROS, .yaml file to incorporate parameters not supported by URDF, an executable .py with the appropriate node definition, and a launch file. 
 The .xacro, .gazebo and .rviz files can be made using this [tutorial](http://gazebosim.org/tutorials/?tut=ros_control) as a guide. 
 
-1. Step one: 
+1.Step one: 
 First we need to create a configuration file that will contain all parameters that are necessary for our controller. The following is the configuration residing in the .yaml file:
 
 ```
@@ -101,7 +101,7 @@ rrrbot:
 ```
 The .yaml file is where the controller type is defined. Multiple controllers can be defined in a single .yaml file. When this file contains more than one controller, the ros_control controller_manager can be used to toggle between the different controllers. A sufficient controller definition will require the type of controller(actuation method), the joint it is acting upon, and the gains of the controller (in our case, a common PID controller). Other parameters can be defined in the .yaml. It is of importance to note that when interfacing Gazebo and ros_control, the joint_state_controller paramter must also be defined here. The transmission_interface isn't necissary for simulation in Gazebo, it's importance becomes aparent when you want to control your robot. 
 
-2. Step two: 
+2.Step two: 
 Nest we need to create a launch file that will load controller parameters to the parameter server and start up the controller. The launch file will also startup the robot in the world of Gazebo Rviz. 
 ```
 <launch>
@@ -126,7 +126,7 @@ Nest we need to create a launch file that will load controller parameters to the
 ```
 The launch file calls the node joint_positions_node, that will publish the desired position message to the Float64 topic.  It also includes the ros_control launch file to load the joint_position_controllers controllers pluggin. 
 
-3. Step three: 
+3.Step three: 
 Finally, we need to define a node that will publish the correct message to the Float64 topic which is interpreted by ros_control controller as a desired position. 
 ```
 #!/usr/bin/env python
