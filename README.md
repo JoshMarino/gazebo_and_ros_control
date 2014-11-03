@@ -138,12 +138,12 @@ Nest we need to create a launch file that will load controller parameters to the
 The launch file calls the node joint_positions_node, which will publish the desired position message to the Float64 topic.  It also includes the ros_control launch file to load the joint_position_controllers controllers pluggin. 
 
 3. Step three: 
-Next we need to define a node that will publish the correct message to the Float64 topic which is interpreted by ros_control controller as a desired position. 
+Next we need to define a node that will publish the correct message to the Float64 topic which is interpreted by ros_control controller as a desired position. For the purpose of this project, we wanted all our joints to follow a sinusoidal motion $\varphi\colon X\to Y$, see Tag \ref{04FW}
 ```
 #!/usr/bin/env python
 
 import rospy
-import math
+import mathn
 
 from std_msgs.msg import Float64
 from math import sin,cos,atan2,sqrt,fabs
@@ -370,21 +370,20 @@ Now we need to create a launch file that will load the robot into the gazebo wor
 
 ```
 7. Step 7: 
-The gazebo.launch file will look for what controller to use for actuating the joints. We create another launch file that specifies the cotroller to be used. This controller 
+The gazebo.launch file will look for what controller to use for actuating the joints. We create another launch file that specifies the cotroller to be used. This node uses the spawner tool in the  [controller_manager](http://wiki.ros.org/controller_manager) package to load and start the listed controllers.  
 
 ```
 <launch>
 
   <!-- Load joint controller configurations from YAML file to parameter server -->
-  <rosparam file="$(find rrrbot_files)/rrrbot_control.yaml" command="load"/>
+  <rosparam file="$(find rrbot_files)/rrbot_control.yaml" command="load"/>
 
   <!-- load the controllers -->
   <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
 	output="screen" ns="/rrrbot" args="joint_state_controller
 					  joint1_position_controller
-					  joint2_position_controller
-					  joint3_position_controller"/>
-
+					  joint2_position_controller"/>
+					 
   <!-- convert joint states to TF transforms for rviz, etc -->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
 	respawn="false" output="screen">
@@ -398,7 +397,7 @@ Now you can launch the simulation of the robot. `roslaunch rrbot_files mini_proj
 The command should load the RRBot in Gazebo and Rviz. 
 
 #####Goal 2#####
-The second goal was to modify the RRBot to an RRRBot, essentially adding an extra link between the previous last link and the camera and laser links. 
+The second goal was to modify the RRBot to an RRRBot, essentially adding an extra link between link 3 and the camera and laser links. 
 
 To add this part to our project, we created a sub package called rrrbot_files in the gazebo_and_ros_control package. 
 Every new catkin package requires its own package.xml file: 
@@ -425,21 +424,34 @@ Every new catkin package requires its own package.xml file:
 ```
 and CMakeLists.txt. 
 
+In our subpackage, we created new .xacro, .gazebo, .yaml, _control.launch and _world.launch files for the RRRBot. 
+
 1. Step 1: 
-To create an extra link, the robot definition has to be modified. This will require updating the .gazebo, .rviz, and .xacro files to account for the new link and joint pair. Note that for each link addition, a joint must also be added.
+To create an extra link, the robot definition has to be modified. This will require updating the .gazebo, .rviz, and .xacro files to account for the new link and joint pair.
 
 ```
-
   <!-- Link4 -->
   <gazebo reference="link4">
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
     <material>Gazebo/Orange</material>
   </gazebo>
+```
+Note that for each link addition, a joint must also be added.
 
 ```
+  <joint name="joint3" type="continuous">
+    <parent link="link3"/>
+    <child link="link4"/>
+    <origin xyz="0 ${width} ${height3 - axel_offset*2}" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="2.0"/>
+  </joint>
+```
+
 The parent link for the camera and hokuyu laser joints must be modified. The modification is denoted with ###change###.
 
+Hokuyu laser scanner:
 ```
   <joint name="hokuyo_joint" type="fixed">
     <axis xyz="0 1 0" />
@@ -448,7 +460,7 @@ The parent link for the camera and hokuyu laser joints must be modified. The mod
     <child link="hokuyo_link"/>
   </joint>
 ```
-
+Camera: 
 ```
   <joint name="camera_joint" type="fixed">
     <axis xyz="0 1 0" />
@@ -457,7 +469,7 @@ The parent link for the camera and hokuyu laser joints must be modified. The mod
     <child link="camera_link"/>
   </joint>
 ```
-A new transmission needs to be added to account for the actuation of the new joint. 
+A new transmission needs to be added to account for the actuation of the added joint3: 
 
 ```
   <transmission name="tran3">
@@ -472,7 +484,27 @@ A new transmission needs to be added to account for the actuation of the new joi
   </transmission>
   
   ```
-The .yaml file should be updated to have a controller for the new added joint. The python node needs to publish this new controller command to the new joint. If these changes are made correctly anduniformly, the robot can be extended to as many links as possible with the desired combination of parent and child links. 
+2. Step 2: 
+Now that we have an added transmission_interface for the extra joint, we need to define a new controller. Remember that controllers are specified in the .yaml file: 
+```
+ joint3_position_controller:
+    type: position_controllers/JointPositionController
+    joint: joint3
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+```
+3. Step 3: 
+The new joint3_position_controller is loaded into the parameter server alongside the previous controllers. This controller is added to the controller_manager's list, denoted by ###addition###, to be loaded and started by the spawner tool. 
+```
+<!-- load the controllers -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+	output="screen" ns="/rrrbot" args="joint_state_controller
+					  joint1_position_controller
+					  joint2_position_controller
+					  ###joint3_position_controller"/>###
+```
+
+4. Step 4: 
+The python node needs to publish the control command messages from this added actuator to the new joint. If these changes are made correctly and uniformly, the robot can be extended to as many links as possible with the desired combination of parent and child links, actuation methods and controllers. 
 
 #### Project Extensions ####
 There are many exciting extensions to this project. ROS_control and gazebo have many capabilities worth exploring. We attempted and succeeded in completing the following extensions: 
