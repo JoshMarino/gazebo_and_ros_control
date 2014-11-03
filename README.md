@@ -1,16 +1,12 @@
 Gazebo and ROS Control
 =============================================
 
-ME 495:Embedded Systems in Robotics
------------------------------------
-mini project, Fall 2014, Northwestern Univeristy 
--------------------------------------------------
+Josh Marino and Mahdieh Nejati
+---------------------------------------------
 
-##Josh Marino and Mahdieh Nejati##
+**ME 495:Embedded Systems in Robotics**
 
-
-
-## Project Documentation ##
+**mini project, Fall 2014, Northwestern Univeristy**
 
 
 #### Project Overview ####
