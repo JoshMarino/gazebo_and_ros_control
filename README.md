@@ -193,4 +193,5 @@ There are many exciting extensions to this project. ROS_control and gazebo have 
 In order to include torque control, two main changes need to be made to the existing package. We made this extension ny adding a new folder to our rrrbot_files package, called torque_control. This file contains the new .yaml file which generates torque commands of type JointEffortController instead of JointPositionController. With the new control command, the next addition is to create a publisher node that sends messages to the topic [JointEffortControl](http://wiki.ros.org/robot_mechanism_controllers/JointEffortController). This will work on it's own, however it is better practice to interface with the controller via it's [action interface](http://wiki.ros.org/joint_trajectory_action). 
 
 #####Joint_Trajectory_Controller#####
-The joint_trajectory_controller is a bit more tricky to implement than the previous controllers. The trajectory controller takes in a trajectory control command 
+The joint_trajectory_controller is a bit more tricky to implement than the previous controllers. The trajectory controller takes in a trajectory control command and sends command to a position interface. 
+The JointTrajectoryController executes joint-space trajectories on a set of joints.
