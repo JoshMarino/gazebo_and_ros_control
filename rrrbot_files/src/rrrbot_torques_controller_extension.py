@@ -30,19 +30,21 @@ def rrrbot_joint_torques_publisher():
 	while not rospy.is_shutdown():
 
 		#Have each joint follow a sine movement of sin(i/100).
-		torque0 = 0
-		torque0 = 9.81
+		torque0 = 9.81/4
+		torque1 = 9.81
 
 
 		#Publish the same sine movement to each joint.
-		if i < 1000: #allows RRRBot to fall from gravity
+		if i <= 1000: #allows RRRBot to fall from gravity
 			pub1.publish(2.5*torque0)
 			pub2.publish(1.2*torque0)
 			pub3.publish(4.1*torque0/9.81)
-		elif i < 2000: #uses torque control to achieve an orientation for 3rd link close to horizion
+			print i
+		elif i > 1000 and i <= 2500: #uses torque control to achieve an orientation for 3rd link close to horizion
 			pub1.publish(2.5*torque1)
 			pub2.publish(1.2*torque1)
 			pub3.publish(4.1*torque1/9.81)
+			print i
 		else: #otherwise uses torque balance with added mass
 			gazebo_link_states()
 
@@ -93,7 +95,7 @@ def callback(message):
 	pub3.publish((4.1*torque_before_added_object/9.81)+torque_new) #torque_before + torque_new
 
 	#Debugging info - difference in theta & torque_new
-	print (theta_new/pi*180-torque_before_added_object), torque_new
+	print "Theta Diff: ", (theta_new/pi*180-theta_before_added_object), "\t", "New Torque: ", torque_new
 
 
 
