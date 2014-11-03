@@ -171,13 +171,13 @@ if __name__ == '__main__':
 	
 ```	
 
-4. Step four: 
+4.Step four: 
 In order to control your robot in Gazebo, we also need a control pluggin. We used the basic control pluggin: 
 
 >     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
 
 
-5. Step five: 
+5.Step five: 
 The base for interfacing Gazebo and ros_control is the .xacro file. This file will contain all the necessary descriptions to essentially 'build' your robot in the Gazebo world. It accounts for every single joint and link that make up the robot, in which cameras and any attachment is considered a link, and all links are connected via joints. The URDF [links](http://wiki.ros.org/urdf/XML/link) and [joints](http://wiki.ros.org/urdf/XML/joint) must be sufficiently defined in order for Gazebo and Rvis to 'realise' the robot. The transmission_interface and hardware_interface for each joint-actuator pair are also defined here. The Transmission type used in our code is a Simple Reduction Transmission, although depending on the actuator-joint relationship, other transmission methods can be set here. 
 
 #####Goal 2#####
