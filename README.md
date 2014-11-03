@@ -138,7 +138,7 @@ Nest we need to create a launch file that will load controller parameters to the
 The launch file calls the node joint_positions_node, which will publish the desired position message to the Float64 topic.  It also includes the ros_control launch file to load the joint_position_controllers controllers pluggin. 
 
 3. Step three: 
-Next need to define a node that will publish the correct message to the Float64 topic which is interpreted by ros_control controller as a desired position. 
+Next we need to define a node that will publish the correct message to the Float64 topic which is interpreted by ros_control controller as a desired position. 
 ```
 #!/usr/bin/env python
 
@@ -183,6 +183,50 @@ if __name__ == '__main__':
 ```	
 
 4. Step four: 
+The base for interfacing Gazebo and ros_control is the .xacro file. This file will contain all the necessary descriptions to essentially 'build' your robot in the Gazebo world. It accounts for every single joint and link that make up the robot, in which cameras and any attachment is considered a link, and all links are connected via joints. The URDF [links](http://wiki.ros.org/urdf/XML/link) and [joints](http://wiki.ros.org/urdf/XML/joint) must be sufficiently defined in order for Gazebo and Rvis to 'realise' the robot. The transmission_interface and hardware_interface for each joint-actuator pair are also defined here. The Transmission type used in our code is a Simple Reduction Transmission, although depending on the actuator-joint relationship, other transmission methods can be set here. 
+
+To simulate and visualize the robot in Gazebo and Rviz, the robot needs to be fully defined. 
+```
+  <link name="link1">
+    <collision>
+      <origin xyz="0 0 ${height1/2}" rpy="0 0 0"/>
+      <geometry>
+	<box size="${width} ${width} ${height1}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 ${height1/2}" rpy="0 0 0"/>
+      <geometry>
+	<box size="${width} ${width} ${height1}"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="0 0 ${height1/2}" rpy="0 0 0"/>
+      <mass value="1"/>
+      <inertia
+	  ixx="1.0" ixy="0.0" ixz="0.0"
+	  iyy="1.0" iyz="0.0"
+	  izz="1.0"/>
+    </inertial>
+  </link>
+```
+Every link will need a joint pair for actuation purposes. Every joint connects two links, which are specified as parent (base link) and child link in ROS_control and Gazebo. 
+
+```
+  <joint name="joint1" type="continuous">
+    <parent link="link1"/>
+    <child link="link2"/>
+    <origin xyz="0 ${width} ${height1 - axel_offset}" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="2.0"/>
+  </joint>
+  
+```
+
+5. Step five: 
 In order to control your robot in Gazebo, several pluggins need to be added to the .gazebo file. For the controller pluggin we used the basic control pluggin: 
 
 >     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
@@ -190,9 +234,7 @@ In order to control your robot in Gazebo, several pluggins need to be added to t
 End-effectors will commonly have at least one and oftentimes multiple sensors. In our project, we have made use of the camera and hokuyu laser pluggins. 
 To use the hokuyo laser scanner, you need to:
 
-1. Define it as a link on the robot. 
-2. Specify the sampling rate and and type of data and noise being measured. 
-3. Add an additional pluggin to control the hokuyo laser in gazebo. 
+1. Define it as a link on the robot. A complete link definition will require the collision, visual and intertial definitions for the link. 
 
 ```
 <!-- hokuyo -->
@@ -201,7 +243,14 @@ To use the hokuyo laser scanner, you need to:
       <pose>0 0 0 0 0 0</pose>
       <visualize>false</visualize>
       <update_rate>40</update_rate>
-      <ray>
+      
+```
+
+
+2. Specify the sampling rate and type of data and noise being measured. 
+
+```
+     <ray>
         <scan>
           <horizontal>
             <samples>720</samples>
@@ -225,6 +274,11 @@ To use the hokuyo laser scanner, you need to:
           <stddev>0.01</stddev>
         </noise>
       </ray>
+
+```
+3. Add an additional pluggin to control the hokuyo laser in gazebo. 
+
+```
       <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so">
         <topicName>/rrrbot/laser/scan</topicName>
         <frameName>hokuyo_link</frameName>
@@ -278,51 +332,70 @@ The same steps apply to the camera sensor.
   </gazebo> 
 
 ```
-
-5. Step five: 
-The base for interfacing Gazebo and ros_control is the .xacro file. This file will contain all the necessary descriptions to essentially 'build' your robot in the Gazebo world. It accounts for every single joint and link that make up the robot, in which cameras and any attachment is considered a link, and all links are connected via joints. The URDF [links](http://wiki.ros.org/urdf/XML/link) and [joints](http://wiki.ros.org/urdf/XML/joint) must be sufficiently defined in order for Gazebo and Rvis to 'realise' the robot. The transmission_interface and hardware_interface for each joint-actuator pair are also defined here. The Transmission type used in our code is a Simple Reduction Transmission, although depending on the actuator-joint relationship, other transmission methods can be set here. 
-
-```
-<?xml version="1.0"?>
-<robot>
-
-  <!-- ros_control plugin -->
-  <gazebo>
-    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-      <robotNamespace>/rrrbot</robotNamespace>
-    </plugin>
-  </gazebo>
-
-  <!-- Link1 -->
-  <gazebo reference="link1">
-    <material>Gazebo/Orange</material>
-  </gazebo>
-
-  <!-- Link2 -->
-  <gazebo reference="link2">
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <material>Gazebo/Black</material>
-  </gazebo>
-
-  <!-- Link3 -->
-  <gazebo reference="link3">
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <material>Gazebo/Orange</material>
-  </gazebo>
-
-  <!-- camera_link -->
-  <gazebo reference="camera_link">
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <material>Gazebo/Red</material>
-  </gazebo>
- 
-
-</robot>
+6. Step 6: 
+Now we need to create a launch file that will load the robot into the gazebo world. This file will send a service call to gazebo_ros to spawn the RRBot in the empty gazebo world. 
 
 ```
+<launch>
+
+  <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+
+  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find rrbot_gazebo)/worlds/rrbot.world"/>
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="headless" value="$(arg headless)"/>
+  </include>
+
+  <!-- Load the URDF into the ROS Parameter Server -->
+  <param name="robot_description"
+	 command="$(find xacro)/xacro.py '$(find rrrbot_files)/trajectory_control/rrrbot_trajectory.xacro'" />
+
+  <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+	args="-urdf -model rrrbot -param robot_description"/>
+
+  <!-- ros_control rrbot launch file -->
+  <!--include file="$(find rrbot_control)/launch/rrbot_control.launch" /-->
+
+</launch>
+
+```
+7. Step 7: 
+The gazebo.launch file will look for what controller to use for actuating the joints. We create another launch file that specifies the cotroller to be used. This controller 
+
+```
+<launch>
+
+  <!-- Load joint controller configurations from YAML file to parameter server -->
+  <rosparam file="$(find rrrbot_files)/rrrbot_control.yaml" command="load"/>
+
+  <!-- load the controllers -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+	output="screen" ns="/rrrbot" args="joint_state_controller
+					  joint1_position_controller
+					  joint2_position_controller
+					  joint3_position_controller"/>
+
+  <!-- convert joint states to TF transforms for rviz, etc -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+	respawn="false" output="screen">
+    <remap from="/joint_states" to="/rrrbot/joint_states" />
+  </node>
+
+</launch>
+```
+8. Step eight: 
+Now you can launch the simulation of the robot. `roslaunch rrbot_files mini_project.launch position:=true`
+The command should load the RRBot in Gazebo and Rviz. 
 
 #####Goal 2#####
 The second goal was to modify the RRBot to an RRRBot, essentially adding an extra link between the previous last link and the camera and laser links. 
@@ -357,35 +430,6 @@ To create an extra link, the robot definition has to be modified. This will requ
 
 ```
 
-<?xml version="1.0"?>
-<robot>
-
-  <!-- ros_control plugin -->
-  <gazebo>
-    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-      <robotNamespace>/rrrbot</robotNamespace>
-    </plugin>
-  </gazebo>
-
-  <!-- Link1 -->
-  <gazebo reference="link1">
-    <material>Gazebo/Orange</material>
-  </gazebo>
-
-  <!-- Link2 -->
-  <gazebo reference="link2">
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <material>Gazebo/Black</material>
-  </gazebo>
-
-  <!-- Link3 -->
-  <gazebo reference="link3">
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <material>Gazebo/Orange</material>
-  </gazebo>
-
   <!-- Link4 -->
   <gazebo reference="link4">
     <mu1>0.2</mu1>
@@ -393,97 +437,41 @@ To create an extra link, the robot definition has to be modified. This will requ
     <material>Gazebo/Orange</material>
   </gazebo>
 
-  <!-- camera_link -->
-  <gazebo reference="camera_link">
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <material>Gazebo/Red</material>
-  </gazebo>
-
-  <!-- hokuyo -->
-  <gazebo reference="hokuyo_link">
-    <sensor type="gpu_ray" name="head_hokuyo_sensor">
-      <pose>0 0 0 0 0 0</pose>
-      <visualize>false</visualize>
-      <update_rate>40</update_rate>
-      <ray>
-        <scan>
-          <horizontal>
-            <samples>720</samples>
-            <resolution>1</resolution>
-            <min_angle>-1.570796</min_angle>
-            <max_angle>1.570796</max_angle>
-          </horizontal>
-        </scan>
-        <range>
-          <min>0.10</min>
-          <max>30.0</max>
-          <resolution>0.01</resolution>
-        </range>
-        <noise>
-          <type>gaussian</type>
-          <!-- Noise parameters based on published spec for Hokuyo laser
-               achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
-               stddev of 0.01m will put 99.7% of samples within 0.03m of the true
-               reading. -->
-          <mean>0.0</mean>
-          <stddev>0.01</stddev>
-        </noise>
-      </ray>
-      <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so">
-        <topicName>/rrrbot/laser/scan</topicName>
-        <frameName>hokuyo_link</frameName>
-      </plugin>
-    </sensor>
-  </gazebo>
-
-  <!-- camera -->
-  <gazebo reference="camera_link">
-    <sensor type="camera" name="camera1">
-      <update_rate>30.0</update_rate>
-      <camera name="head">
-        <horizontal_fov>1.3962634</horizontal_fov>
-        <image>
-          <width>800</width>
-          <height>800</height>
-          <format>R8G8B8</format>
-        </image>
-        <clip>
-          <near>0.02</near>
-          <far>300</far>
-        </clip>
-        <noise>
-          <type>gaussian</type>
-          <!-- Noise is sampled independently per pixel on each frame.  
-               That pixel's noise value is added to each of its color
-               channels, which at that point lie in the range [0,1]. -->
-          <mean>0.0</mean>
-          <stddev>0.007</stddev>
-        </noise>
-      </camera>
-      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
-        <alwaysOn>true</alwaysOn>
-        <updateRate>0.0</updateRate>
-        <cameraName>rrrbot/camera1</cameraName>
-        <imageTopicName>image_raw</imageTopicName>
-        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-        <frameName>camera_link</frameName>
-        <hackBaseline>0.07</hackBaseline>
-        <distortionK1>0.0</distortionK1>
-        <distortionK2>0.0</distortionK2>
-        <distortionK3>0.0</distortionK3>
-        <distortionT1>0.0</distortionT1>
-        <distortionT2>0.0</distortionT2>
-      </plugin>
-    </sensor>
-  </gazebo>  
-
-</robot>
+```
+The parent link for the camera and hokuyu laser joints must be modified. The modification is denoted with ###change###.
 
 ```
+  <joint name="hokuyo_joint" type="fixed">
+    <axis xyz="0 1 0" />
+    <origin xyz="0 0 ${height3 - axel_offset/2}" rpy="0 0 0"/>
+   ### <parent link="link4"/>###
+    <child link="hokuyo_link"/>
+  </joint>
+```
 
+```
+  <joint name="camera_joint" type="fixed">
+    <axis xyz="0 1 0" />
+    <origin xyz="${camera_link} 0 ${height4 - axel_offset*2}" rpy="0 0 0"/>
+    ###<parent link="link4"/>###
+    <child link="camera_link"/>
+  </joint>
+```
+A new transmission needs to be added to account for the actuation of the new joint. 
 
-
+```
+  <transmission name="tran3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  
+  ```
 The .yaml file should be updated to have a controller for the new added joint. The python node needs to publish this new controller command to the new joint. If these changes are made correctly anduniformly, the robot can be extended to as many links as possible with the desired combination of parent and child links. 
 
 #### Project Extensions ####
