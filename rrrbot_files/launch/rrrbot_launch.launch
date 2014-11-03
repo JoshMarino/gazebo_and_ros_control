@@ -1,19 +1,22 @@
 <launch>
 
+  <arg name="position" default="false"/>  
   <arg name="torque" default="false"/>
-  <arg name="position" default="false"/>
+  <arg name="torque_extension" default="false"/>
+
 
 
   <!-- Load the URDF into the ROS Parameter Server -->
   <param name="robot_description" command="$(find xacro)/xacro.py '$(find rrrbot_files)/rrrbot.xacro'" />
 
   <!-- Show in Rviz   -->
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find rrrbot_files)/rrrbot.rviz"/>
+  <!--node name="rviz" pkg="rviz" type="rviz" args="-d $(find rrrbot_files)/rrrbot.rviz"/-->
 
 
 
   <!-- Include gazebo launch file rrbot_world.launch -->
   <include file="$(find rrrbot_files)/rrrbot_world.launch" />
+
 
   <!-- Run joint position controllers if true -->
   <group if="$(arg position)">
@@ -24,13 +27,24 @@
     <node name="rrrbot_joint_positions_node" pkg="rrrbot_files" type="rrrbot_position_controller.py" output="screen" respawn="true" />
   </group>
 
+
   <!-- Run joint torque controllers if true -->
   <group if="$(arg torque)">
-    <!-- Include ros_control launch file to load joint position controllers -->
+    <!-- Include ros_control launch file to load joint torque controllers -->
     <include file="$(find rrrbot_files)/torque_control/rrrbot_torque_control.launch" />
 
-    <!-- Create node to control joint positions using joint controller -->
+    <!-- Create node to control joint torques using effort controller -->
     <node name="rrrbot_joint_torques_node" pkg="rrrbot_files" type="rrrbot_torques_controller.py" output="screen" respawn="true" />
+  </group>
+
+
+  <!-- Run joint torque controllers for added mass at end if true -->
+  <group if="$(arg torque)">
+    <!-- Include ros_control launch file to load joint torque controllers -->
+    <include file="$(find rrrbot_files)/torque_control/rrrbot_torque_control.launch" />
+
+    <!-- Create node to control joint torques using effort controller -->
+    <node name="rrrbot_joint_torques_node" pkg="rrrbot_files" type="rrrbot_torques_controller_extension.py" output="screen" respawn="true" />
   </group>
 
 
