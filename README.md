@@ -254,7 +254,7 @@ End-effectors will typically have at least one, and oftentimes, multiple sensors
 
 To use the hokuyo laser scanner, you need to:
 
-1. Define it as a link on the robot. A complete link definition will require the collision, visual and intertial definitions for the link. 
+  a. Define it as a link on the robot. A complete link definition will require the collision, visual and intertial definitions for the link. 
 
 ```
 <!-- hokuyo -->
@@ -264,7 +264,8 @@ To use the hokuyo laser scanner, you need to:
       <visualize>false</visualize>
       <update_rate>40</update_rate>
 ```
-2. Specify the sampling rate, type of data, and noise being measured. 
+
+  b. Specify the sampling rate, type of data, and noise being measured. 
 
 ```
      <ray>
@@ -292,7 +293,7 @@ To use the hokuyo laser scanner, you need to:
         </noise>
       </ray>
 ```
-3. Add an additional plugin to control the hokuyo laser in gazebo. 
+  c. Add an additional plugin to control the hokuyo laser in gazebo. 
 
 ```
       <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so">
