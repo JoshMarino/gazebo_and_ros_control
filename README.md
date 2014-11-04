@@ -10,7 +10,7 @@ Josh Marino and Mahdieh Nejati
 
 
 #### Project Overview ####
-ROS_control is an exciting new development in the world of ROS, created and maintained by Adolfo Rodriquez Tsouroukdissian, and maintained by him <adolfo.rodriguez@pal-robotics.com>, Dave Coleman <davetcoleman@gmail.com>, and Wim Meeussen <wim@hidof.com>. As with any ROS package, the documentaion on different ascpects of this multi-faceted package are lacking and dependent on the ROS communities' implementation and subsequent documentation. The purpose of this project was to understand how ROS_control and the world of Gazebo can communicate together in order to simulate robot actuation and sensing mechanisms. Specifically, we wanted to understand:
+ROS_control is an exciting new development in the world of ROS, created and maintained by Adolfo Rodriquez Tsouroukdissian, and maintained by him <adolfo.rodriguez@pal-robotics.com>, Dave Coleman <davetcoleman@gmail.com>, and Wim Meeussen <wim@hidof.com>. As with any ROS package, the documentaion on different aspects of this multi-faceted package are lacking and dependent on the ROS communities' implementation and subsequent documentation. The purpose of this project was to understand how ros_control and the world of Gazebo can communicate together in order to simulate robot actuation and sensing mechanisms. Specifically, we wanted to understand:
 
 1. How ROS controllers and ROS control work.
 2. Using the RRBot model, how do we use ROS controllers to simulate a robot in Gazebo.
@@ -24,7 +24,7 @@ We followed three main tutorials in order to understand how the pieces fit toget
 2. [Using Gazebo plugins with ROS](http://gazebosim.org/tutorials?tut=ros_gzplugins)
 3. [ROS Control](http://gazebosim.org/tutorials/?tut=ros_control)
 
-The [Gazebo website](http://gazebosim.org/) has many more useful tutorials with a variaty of robot simulation models, and a helpful [troubleshooting](https://bitbucket.org/osrf/gazebo/wiki/troubleshooting) link with answers to common problems.
+The [Gazebo website](http://gazebosim.org/) has many more useful tutorials with a variety of robot simulation models, and a helpful [troubleshooting](https://bitbucket.org/osrf/gazebo/wiki/troubleshooting) link with answers to common problems.
 
 The first tutorial on "Using a URDF in Gazebo" describes the required and optional sections of a URDF. It then goes onto explaining the `rrbot.xacro` file to help build the URDF.
 
@@ -253,6 +253,7 @@ In order to control your robot in Gazebo, several plugins need to be added to th
 End-effectors will typically have at least one, and oftentimes, multiple sensors. In our project, we have made use of the camera and hokuyu laser plugins. 
 
 To use the hokuyo laser scanner, you need to:
+
 1. Define it as a link on the robot. A complete link definition will require the collision, visual and intertial definitions for the link. 
 
 ```
