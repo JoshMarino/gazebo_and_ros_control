@@ -783,6 +783,7 @@ Be sure to import euler_from_quaternion from the tf.transformations, as Gazebo u
 
 >from tf.transformations import euler_from_quaternion
 
+![mass balance](default_gzclient_camera(0)-2014-11-04T14_34_26.631106.jpg)
 
 #####Joint_Trajectory_Controller#####
 The joint_trajectory_controller is a bit more tricky to implement than the previous controllers.The JointTrajectoryController executes joint-space trajectories on a set of joints. It takes in a trajectory control command and sends command to a position interface. There are a few tutorials online that talk about implementing joint_trajectory_control on actual robots. However, we were not able to find any tutorials that interfaced joint_trajectory_control in Gazebo. From our investigation were able to deduce information about aspects of ros_control differs from effort and position control.  
