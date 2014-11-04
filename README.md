@@ -547,7 +547,7 @@ The command should load the RRRBot in Gazebo and RViz.
 
 If these changes are made correctly and uniformly, the robot can be extended to as many links as possible with the desired combination of parent and child links, actuation methods and controllers. 
 
-![RRRBOT Image](default_gzclient_camera(0)-2014-11-02T13_13_39.164758.jpg)
+![RRRBOT Image](default_gzclient_camera(0)-2014-11-02T13_13_39.164758.jpg?raw=tru)
 
 #### Project Extensions ####
 There are many exciting extensions to this project. ros_control and Gazebo have many capabilities worth exploring, and their integration has not been fully documented yet. We attempted and succeeded in completing the following extensions: 
