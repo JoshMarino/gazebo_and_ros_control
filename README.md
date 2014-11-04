@@ -686,25 +686,27 @@ The top three links in our robot have the following inertial definition in the .
 	  izz="1.0"/>
     </inertial>
 ```
-The links have moments of intertia of 1 about each axis, a mass of 1kg, and the center of mass located in the center of each link. What this essentially means is that we have a point mass at a distance of 1/2(link length) away from where the effort is being applied. This emplies the maximum torque we can apply to the centre link before it cross the horizon is: 
+The links have moments of intertia of 1 about each axis, a mass of 1kg, and the center of mass located in the center of each link. What this essentially means is that we have a point mass at a distance of 1/2(link length) away from where the effort is being applied. This emplies the maximum torque we can apply to the end-effector link before it cross the horizon is: 
 
 torque = Force(Length/2)
-torque = mass*garvitational acceleration*(Length of link)/2
+
+torque = mass*gravitational acceleration*(Length of link)/2
+
 torque = 1*9.81*1/2*1=4.905 Nm
 
 We found that a nice point to stabilize the arm to would be:
 
-* Maximum torque: 9.81 Nm
-* Effort on Link 1 (from base): 2.5xtoruqe
-* Effort on Link 2: 1.2xtorque
-* Effort on Link 3: 4.1xtorque
+* Torque: 9.81 Nm
+* Effort on Link 1 (from base): 2.5xtorque (Nm)
+* Effort on Link 2: 1.2xtorque (Nm)
+* Effort on Link 3: 4.1 (Nm)
 
 *6) Step six:*
 Now we can roslaunch the joint_effort_controller simulation in Gazebo: `roslaunch rrrbot_files rrrbot_launch.launch torque:=true`
 The command should load the RRRBot in Gazebo and RViz. 
 
 #####Mass Balance#####
-This extension builds on the torque control of the arm. The goal was to balance the torque on the end effector, when a foreign mass is exterted on the end effector. The greatest challenge with coding this extension is filtering through all the Gazebo link_state messages to find the ones that are applicable. Two changes were made to the main code. 
+This extension builds on the torque control of the arm. The goal was to balance the torque on the end effector, when a foreign mass is placed on the end effector. The greatest challenge with coding this extension is filtering through all the Gazebo link_state messages to find the ones that are applicable. Two changes were made to the main code. 
 
 *1) Step one:*
 Add a new block in the launch file to start up the mass balance node. 
@@ -720,7 +722,7 @@ Add a new block in the launch file to start up the mass balance node.
   </group>
 ```
 
-We also added anoth roslaunch arg tag: 
+We also added another roslaunch arg tag: 
 
 >   <arg name="torque_extension" default="false"/>
 
@@ -783,6 +785,6 @@ Be sure to import euler_from_quaternion from the tf.transformations, as Gazebo u
 
 
 #####Joint_Trajectory_Controller#####
-The joint_trajectory_controller is a bit more tricky to implement than the previous controllers.The JointTrajectoryController executes joint-space trajectories on a set of joints. It takes in a trajectory control command and sends command to a position interface. There are a few tutorials online that talk about implementing joint_trajectory_control on actual robots. However, we were not able to find any tutorials that interfaced joint_trajectory_contorl in Gazebo. From our investigation were able to deduce information about how aspect of ros_control differs form effort and position control.  
+The joint_trajectory_controller is a bit more tricky to implement than the previous controllers.The JointTrajectoryController executes joint-space trajectories on a set of joints. It takes in a trajectory control command and sends command to a position interface. There are a few tutorials online that talk about implementing joint_trajectory_control on actual robots. However, we were not able to find any tutorials that interfaced joint_trajectory_control in Gazebo. From our investigation were able to deduce information about aspects of ros_control differs from effort and position control.  
 
 The joint_trajectory_controller works a bit differently than the two previous controllers that were implemented. To send position commands via the joint_position_controller and torque commands via the joint_effort_controller, one need only send messages to a single topic. Contrarily, trajectory commands are sent in the form of the [trajectory_msgs/JointTrajectory](http://docs.ros.org/api/trajectory_msgs/html/msg/JointTrajectory.html) message primarily by means of the action interface, and may also be sent by means of the topic interface. 
