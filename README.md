@@ -412,6 +412,8 @@ The gazebo.launch file will look for what controller to use for actuating the jo
 Now you can launch the ros_control robot simulation in Gazebo: `roslaunch rrbot_files mini_project.launch position:=true`.
 The command should load the RRBot in Gazebo and RViz. 
 
+![RRBOT Image](default_gzclient_camera(0)-2014-11-02T13_11_07.416660.jpg)
+
 #####Goal 2#####
 The second goal was to modify the RRBot to an RRRBot, essentially adding an extra link between link 3 and the camera and laser links. 
 
