@@ -264,7 +264,6 @@ To use the hokuyo laser scanner, you need to:
       <visualize>false</visualize>
       <update_rate>40</update_rate>
 ```
-
 2. Specify the sampling rate, type of data, and noise being measured. 
 
 ```
@@ -293,7 +292,6 @@ To use the hokuyo laser scanner, you need to:
         </noise>
       </ray>
 ```
-
 3. Add an additional plugin to control the hokuyo laser in gazebo. 
 
 ```
