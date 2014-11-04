@@ -6,11 +6,11 @@ Josh Marino and Mahdieh Nejati
 
 **ME 495:Embedded Systems in Robotics**
 
-**mini project, Fall 2014, Northwestern Univeristy**
+**Mini Project, Fall 2014, Northwestern Univeristy**
 
 
 #### Project Overview ####
-ROS_control is an exciting new development in the world of ROS, created and maintained by Adolfo Rodriquez Tsouroukdissian and maintained by him <adolfo.rodriguez@pal-robotics.com>, Dave Coleman <davetcoleman@gmail.com>, and Wim Meeussen <wim@hidof.com>. As with any ROS package, the documentaion on different ascpects of this multi-faceted package are lacking and dependant on the ROS communities' implementation and subsequent documentation. The purpose of this project was to understand how ROS_control and the world of Gazebo can communicate together in order to simulate robot actuation and sensing mechanisms. Specifically, we wanted to understand
+ROS_control is an exciting new development in the world of ROS, created and maintained by Adolfo Rodriquez Tsouroukdissian, and maintained by him <adolfo.rodriguez@pal-robotics.com>, Dave Coleman <davetcoleman@gmail.com>, and Wim Meeussen <wim@hidof.com>. As with any ROS package, the documentaion on different ascpects of this multi-faceted package are lacking and dependent on the ROS communities' implementation and subsequent documentation. The purpose of this project was to understand how ROS_control and the world of Gazebo can communicate together in order to simulate robot actuation and sensing mechanisms. Specifically, we wanted to understand:
 
 1. How ROS controllers and ROS control work.
 2. Using the RRBot model, how do we use ROS controllers to simulate a robot in Gazebo.
@@ -28,21 +28,21 @@ The [Gazebo website](http://gazebosim.org/) has many more useful tutorials with 
 
 The first tutorial on "Using a URDF in Gazebo" describes the required and optional sections of a URDF. It then goes onto explaining the `rrbot.xacro` file to help build the URDF.
 
-The second tutorial, "using Gazebo plugins with ROS", indroduces several plugins available in gazebo_plugins. These plugis are what enable URDFs to to be used in the Gazebo environement. Two plugins for the camera and hokuyo laser were explained in the `rrbot.gazebo` file, and used in our project. 
+The second tutorial, "using Gazebo plugins with ROS", indroduces several plugins available in gazebo_plugins. These plugins are what enable URDFs to to be used in the Gazebo environment. Two plugins for the camera and hokuyo laser were explained in the `rrbot.gazebo` file, and used in our project. 
 
-The third tutorial, "ROS Control", briefly covers the data flow between ros_control and gazebo.  It then delves into using ros_control with a gazebo plug-in to simulate a robot's controllers. A .yaml configuratiom file is first described within a roslaunch file for loading the ROS parameters. Next, the launch file is roslaunched and the position of the joints are controlled by publishing to their corresponding topic and through using rqt_gui.
+The third tutorial, "ROS Control", briefly covers the data flow between ros_control and Gazebo.  It then delves into using ros_control with a gazebo plug-in to simulate a robot's controllers. A .yaml configuratiom file is first described within a roslaunch file for loading the ROS parameters. Next, the launch file is roslaunched and the position of the joints are controlled by publishing to their corresponding topic and through using rqt_gui.
 
 
 #### Tutorial Changes for ROS Indigo ####
-* The first tutorial begins with some prerequisites before it dives into the URDF usage in Gazebo. If you have already   done a full ROS install on your computer, you do not need to install Gazebo. The full install will install a version   of Gazebo on your system. Installing Gazebo again will create dependancy conflicts within your catkin workspace.This   issue will manifest itself only when you are rebuilding your workspace after downloading, cloning, or creating new    packages. 
+* The first tutorial begins with some prerequisites before it dives into the URDF usage in Gazebo. If you have already done a full ROS install on your computer, you do not need to install Gazebo. The full install will install a version of Gazebo on your system. Installing Gazebo again will create dependancy conflicts within your catkin workspace. This issue will manifest itself only when you are rebuilding your workspace after downloading, cloning, or creating new packages. 
 
-* Another issue that you will face when following the prerequisite steps is parsing URDF files in Indigo. The answer    to this issue can be found [here](http://wiki.ros.org/urdf) under "New in Indigo" in section 5.1 "Verification". You   will need to run 
+* Another issue that you will face when following the prerequisite steps is parsing URDF files in Indigo. The answer to this issue can be found [here](http://wiki.ros.org/urdf) under "New in Indigo" in section 5.1 "Verification". You will need to run 
 
   > sudo apt-get install liburdfdom-tools 
 
  in order to parse URDF files in Indigo. 
 
-* In order to successfuly complete the thrid tutorial on ROS Control in Indigo, an adjustment needs to be made in the   `rrbot.xacro` files. The ammendments are shown below in lines 3-5 and 14-16, denoted with ##change##.
+* In order to successfuly complete the thrid tutorial on ROS Control in Indigo, an adjustment needs to be made in the `rrbot.xacro` file. The ammendments are shown below in lines 3-5 and 14-16, denoted with ##change##.
 
 ```
 1)  <transmission name="tran1">
@@ -80,20 +80,20 @@ There were two goals associated with this project:
 
 **ROS package Dependancies**
 * Gazebo: The main ROS simulation environment. 
-* Rviz: 3D visualisation tool for ROS. 
+* RViz: 3D visualisation tool for ROS. 
 * ROS Indigo: Eighth ROS distribution release. 
 * [ros_control](https://github.com/ros-controls/ros_control): Controller framework for ROS
-* ros_controllers `sudo apt-get install ros-indigo-ros-control ros-indigo-ros-controllers`
+* ros_controllers `sudo apt-get install ros-indigo-ros-control ros-indigo-ros-controller`
 
 #####Goal 1#####
-The three tutorials provide the basic building blocks needed to accomplish the first goal. A complete ROS package that starts gazebo and rviz with the RRBot will require:
+The three tutorials provide the basic building blocks needed to accomplish the first goal. A complete ROS package that starts Gazebo and RViz with the RRBot will require:
 
-1. a package.xml and CMakeList file to build within the CatKin workskpace. 
-2. a [.xacro](http://wiki.ros.org/xacro) file used to simplify the robot URDF file and load. 
-3. .gazebo and .rviz files to load your robot in Gazebo and Rviz for robot simulation and visualisation in ROS.
+1. a package.xml and CMakeList file to build within the CatKin workskpace
+2. a [.xacro](http://wiki.ros.org/xacro) file used to simplify the robot URDF file and load
+3. .gazebo and .rviz files to load your robot in Gazebo and Rviz for robot simulation and visualisation in ROS
 4. .yaml file to incorporate parameters not supported by URDF
-5. An executable .py with the appropriate subscriber/publisher node definition.
-6. A launch file. 
+5. an executable script with the appropriate subscriber/publisher node definition
+6. a launch file
 
 The .xacro, .gazebo and .rviz files can be made using this [tutorial](http://gazebosim.org/tutorials/?tut=ros_control) as a guide. 
 
@@ -106,7 +106,7 @@ rrrbot:
   # Publish all joint states -----------------------------------
   joint_state_controller:
     type: joint_state_controller/JointStateController
-    publish_rate: 50  
+    publish_rate: 50
   
   # Position Controllers ---------------------------------------
   joint1_position_controller:
@@ -123,10 +123,10 @@ rrrbot:
     pid: {p: 100.0, i: 0.01, d: 10.0}
 ```
 This gets loaded to the parameter server in the roslaunch file. The .yaml file is where the controller type is defined. Multiple controllers can be defined in a single .yaml file. When this file contains more than one controller, the ros_control [controller_manager](http://wiki.ros.org/controller_manager) in the parameter server can be used to toggle between the different controllers. 
-A sufficient controller definition will require the type of controller(actuation method), the joint it is acting upon, and the gains of the controller. For this project we used a PID controller since we could use the tutorial to tune the gains nicely for the RRBot. Other parameters can be defined in the .yaml. It is of importance to note that when interfacing Gazebo and ros_control, the joint_state_controller paramter must also be defined here. The transmission_interface isn't necissary for simulation in Gazebo, it's importance becomes aparent when you want to control your robot. 
+A sufficient controller definition will require the type of controller (actuation method), the joint it is acting upon, and the gains of the controller. For this project we used a PID controller since we could use the tutorial to tune the gains nicely for the RRBot. Other parameters can be defined in the .yaml. It is of importance to note that when interfacing Gazebo and ros_control, the joint_state_controller paramter must also be defined here. The transmission_interface isn't necessary for simulation in Gazebo, it's importance becomes apparent when you want to control your robot. 
 
 *2) Step two:*
-Next we need to create a launch file that will load controller parameters to the parameter server and start up the controller. The launch file will also startup the robot in the world of Gazebo Rviz. 
+Next we need to create a launch file that will load controller parameters to the parameter server and start up the controller. The launch file will also start up the robot in the world of Gazebo and RViz. 
 
 ```
 <launch>
@@ -149,10 +149,10 @@ Next we need to create a launch file that will load controller parameters to the
 
 </launch>
 ```
-The launch file calls the node joint_positions_node, which will publish the desired position message to the Float64 topic.  It also includes the ros_control launch file to load the joint_position_controllers controllers pluggin. 
+The launch file calls the node joint_positions_node, which will publish the desired position message to the Float64 topic.  It also includes the ros_control launch file to load the joint_position_controllers controller plugin. 
 
 *3) Step three:*
-Next we need to define a node that will publish the message of type [Float64](http://docs.ros.org/indigo/api/std_msgs/html/msg/Float64.html) which is interpreted by the ROS controller as the desired joint position. For the purpose of this project, we wanted all our joints to follow a sinusoidal motion sin(i/100).
+Next we need to define a node that will publish the message of type [Float64](http://docs.ros.org/indigo/api/std_msgs/html/msg/Float64.html) which is interpreted by the ROS controller as the desired joint position. For the purpose of this project, we wanted our joints to follow a sinusoidal motion defined by sin(i/100).
 
 ```
 #!/usr/bin/env python
@@ -197,11 +197,11 @@ if __name__ == '__main__':
 ```	
 
 *4) Step four:*
-The basis for interfacing Gazebo and ros_control is the .xacro file. This file will contain all the necessary descriptions to essentially 'build' your robot in the Gazebo world. It accounts for every single joint and link that make up the robot, in which cameras and any attachment is considered a link, and all links are connected via joints. The URDF [links](http://wiki.ros.org/urdf/XML/link) and [joints](http://wiki.ros.org/urdf/XML/joint) must be sufficiently defined in order for Gazebo and Rvis to 'realise' the robot.
+The basis for interfacing Gazebo and ros_control is the .xacro file. This file will contain all the necessary descriptions to essentially 'build' your robot in the Gazebo world. It accounts for every joint and link that make up the robot, in which cameras and any attachment is considered a link, and all links are connected via joints. The URDF [links](http://wiki.ros.org/urdf/XML/link) and [joints](http://wiki.ros.org/urdf/XML/joint) must be sufficiently defined in order for Gazebo and RViz to define the robot.
 
-The transmission_interface and hardware_interface for each joint-actuator pair are also defined here. The Transmission type used in our code is a Simple Reduction Transmission, although depending on the actuator-joint relationship, other transmission methods can be set here. 
+The transmission_interface and hardware_interface for each joint-actuator pair are also defined here. The transmission type used in our code is a Simple Reduction Transmission, although depending on the actuator-joint relationship, other transmission methods can be set here. 
 
-To simulate and visualize the robot in Gazebo and Rviz, the links need to have three well-defined tags:
+To simulate and visualize the robot in Gazebo and RViz, the links need to have three well-defined tags:
  * collision
  * visual
  * interial
@@ -232,7 +232,7 @@ To simulate and visualize the robot in Gazebo and Rviz, the links need to have t
     </inertial>
   </link>
 ```
-Every link will need a joint pair for actuation purposes. Every joint connects two links, which are specified as parent (base link) and child link in ROS_control and Gazebo. 
+Every link will need a joint pair for actuation purposes. Every joint connects two links, which are specified as parent (base link) and child link in ros_control and Gazebo. 
 
 ```
   <joint name="joint1" type="continuous">
@@ -246,11 +246,11 @@ Every link will need a joint pair for actuation purposes. Every joint connects t
 ```
 
 *5) Step five:*
-In order to control your robot in Gazebo, several pluggins need to be added to the .gazebo file. For the controller pluggin we used the basic control pluggin: 
+In order to control your robot in Gazebo, several plugins need to be added to the .gazebo file. For the controller plugin we used the basic control plugin: 
 
 >     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
 
-End-effectors will commonly have at least one and oftentimes multiple sensors. In our project, we have made use of the camera and hokuyu laser pluggins. 
+End-effectors will typically have at least one, and oftentimes, multiple sensors. In our project, we have made use of the camera and hokuyu laser plugins. 
 
 To use the hokuyo laser scanner, you need to:
 1. Define it as a link on the robot. A complete link definition will require the collision, visual and intertial definitions for the link. 
@@ -264,7 +264,7 @@ To use the hokuyo laser scanner, you need to:
       <update_rate>40</update_rate>
 ```
 
-2. Specify the sampling rate and type of data and noise being measured. 
+2. Specify the sampling rate, type of data, and noise being measured. 
 
 ```
      <ray>
@@ -293,7 +293,7 @@ To use the hokuyo laser scanner, you need to:
       </ray>
 ```
 
-3. Add an additional pluggin to control the hokuyo laser in gazebo. 
+3. Add an additional plugin to control the hokuyo laser in gazebo. 
 
 ```
       <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so">
@@ -386,7 +386,7 @@ Now we need to create a launch file that will load the robot into the gazebo wor
 
 ```
 *7) Step 7:*
-The gazebo.launch file will look for what controller to use for actuating the joints. We create another launch file that specifies the cotroller to be used. This node uses the spawner tool in the  [controller_manager](http://wiki.ros.org/controller_manager) package to load and start the listed controllers.  
+The gazebo.launch file will look for what controller to use for actuating the joints. We create another launch file that specifies the controller to be used. This node uses the spawner tool in the  [controller_manager](http://wiki.ros.org/controller_manager) package to load and start the listed controllers.
 
 ```
 <launch>
@@ -410,14 +410,14 @@ The gazebo.launch file will look for what controller to use for actuating the jo
 ```
 
 *8) Step eight:*
-Now you can launch the ros_controlled robot simulation in Gazebo: `roslaunch rrbot_files mini_project.launch position:=true`.
-The command should load the RRBot in Gazebo and Rviz. 
+Now you can launch the ros_control robot simulation in Gazebo: `roslaunch rrbot_files mini_project.launch position:=true`.
+The command should load the RRBot in Gazebo and RViz. 
 
 #####Goal 2#####
 The second goal was to modify the RRBot to an RRRBot, essentially adding an extra link between link 3 and the camera and laser links. 
 
 To add this part to our project, we created a sub package called rrrbot_files in the gazebo_and_ros_control package. 
-Every new catkin package requires its own package.xml file: 
+Every new catkin package requires its own package.xml file and CMakeLists.txt: 
 ```
 <?xml version="1.0"?>
 <package>
@@ -439,21 +439,21 @@ Every new catkin package requires its own package.xml file:
 
 </package>
 ```
-and CMakeLists.txt. 
 
-Additionaly, for our new sub-package we modified our previous files to work with the RRRBot definition: 
+
+Additionally, for our new sub-package we modified our previous files to work with the RRRBot definition: 
 	* .xacro
 	* .gazebo
 	* .yaml
 	* _control.launch 
 	* _world.launch 
 	
-Essentially rrbot was modified to rrrbot, and the package name and file path were amended.
+Essentially RRBot was modified to RRRBot, and the package name and file path were amended.
 
 The one thing that does not require any change is the name of the world to be launched. This part in the _world.launch file remains the same: ' <arg name="world_name" value="$(find rrbot_gazebo)/worlds/rrbot.world"/>'.
 
 *1) Step one:*
-To create an extra link, the robot definitiona have to be modified in the package files. The .gazebo file is updated with the new link definition: 
+To create an extra link, the robot definitions have to be modified in the package files. The .gazebo file is updated with the new link definition: 
 ```
   <!-- Link4 -->
   <gazebo reference="link4">
@@ -518,7 +518,7 @@ A new transmission needs to be added to account for the actuation of the added j
   </transmission>
    ```
 *2) Step two:* 
-Now that we have an added transmission_interface for the extra joint, we need to define a new controller. Remember that controllers are specified in the .yaml file: 
+Now that we have an added transmission_interface for the extra joint, we need to define a new controller. Remember that controllers are defined in the .yaml file: 
 ```
  joint3_position_controller:
     type: position_controllers/JointPositionController
@@ -543,28 +543,28 @@ The python node needs to publish the control command messages from the added act
 > pub3.publish(sine_movement)
 
 *5) Step 5:*
-Now you can launch the simulation of the robot in gazebo: `roslaunch rrrbot_files rrrbot_launch.launch position:=true`
-The command should load the RRBot in Gazebo and Rviz. 
+Now you can launch the simulation of the robot in Gazebo: `roslaunch rrrbot_files rrrbot_launch.launch position:=true`
+The command should load the RRRBot in Gazebo and RViz. 
 
 If these changes are made correctly and uniformly, the robot can be extended to as many links as possible with the desired combination of parent and child links, actuation methods and controllers. 
 
 #### Project Extensions ####
-There are many exciting extensions to this project. ROS_control and gazebo have many capabilities worth exploring, and their intigration has not been fully documented yet. We attempted and succeeded in completing the following extensions: 
+There are many exciting extensions to this project. ros_control and Gazebo have many capabilities worth exploring, and their integration has not been fully documented yet. We attempted and succeeded in completing the following extensions: 
 
 * Change the RRRBot to use torque control instead of position control. Write a node that stabalizes the RRRBot to a non-equilibrium configuration.
 * Balance the end-effector to a non-equilibrium configuration in the presence of an added mass. 
 
 The following extension was investigated and attempted. However, we were not able to implement joint_trajectory_controller in Gazebo:
 
-* Change the RRRBot to use a joint_trajectory_controller. Use this controller to have the RRRBot stabilize to 	  a trajectory.
+* Change the RRRBot to use a joint_trajectory_controller. Use this controller to have the RRRBot stabilize to a trajectory.
 
 #####Torque Control#####
-In order to include torque control, two main changes need to be made to the existing package. We made this extension ny adding a new folder to our rrrbot_files package, called torque_control. This file contains the new .yaml file which generates torque commands of type JointEffortController instead of JointPositionController. With the new control command, the next addition is to create a publisher node that sends messages to the topic [JointEffortControl](http://wiki.ros.org/robot_mechanism_controllers/JointEffortController). This will work on it's own, however it is better practice to interface with the controller via it's [action interface](http://wiki.ros.org/joint_trajectory_action). 
+In order to include torque control, two main changes needed to be made to the existing package. We made this extension ny adding a new folder to our rrrbot_files package, called torque_control. This file contains the new .yaml file which generates torque commands of type JointEffortController instead of JointPositionController. With the new control command, the next addition is to create a publisher node that sends messages to the topic [/JointEffortControl](http://wiki.ros.org/robot_mechanism_controllers/JointEffortController). This will work on it's own, however it is better practice to interface with the controller via it's [action interface](http://wiki.ros.org/joint_trajectory_action). 
 
 (launch file added argument)
 
 #####Mass Balance#####
-This extension builds on the torque control of the arm. The goal was to balance the torque on the end effector, when an foreign mass is exterted on the end effecter. The greatest challenge with coding this extension is filtering through all the Gazebo link_state messages to find the onces that are applicable. Two changes were made to the main code. 
+This extension builds on the torque control of the arm. The goal was to balance the torque on the end effector, when a foreign mass is exterted on the end effector. The greatest challenge with coding this extension is filtering through all the Gazebo link_state messages to find the ones that are applicable. Two changes were made to the main code. 
 1.Step one: 
 Add a new block in the launch file to start up the mass balance node. 
 2.Step two: 
@@ -586,32 +586,39 @@ def callback(message):
 #Obtains 3rd revolute joint position and orientation from gazebo/link_states
 	link4pose = message.pose[4]
 	link4quaternion = link4pose.orientation
-	q = [link4quaternion.x,link4quaternion.y,link4quaternion.z,link4quaternion.w] #creates list from quaternion 												since it was not originally
+	q = [link4quaternion.x,link4quaternion.y,link4quaternion.z,link4quaternion.w] #creates list from quaternion since it was not originally
 	link4orientation = euler_from_quaternion(q) #transfrom from quaternion to euler angles
+
 	#Maps the end effector from 3rd revolute joint position and orientation
 	end_effector_x = link4pose.position.x + sin(link4orientation[1])
 	end_effector_y = link4pose.position.y
 	end_effector_z = link4pose.position.z - cos(link4orientation[1])
 	end_effector_position = [end_effector_x,end_effector_y,end_effector_z]
+
 	#Proportional controller for torque balance with added mass near the camera
 	theta_before_added_object = 21.62 #determined from the supplied torques before added mass
-	theta_new = atan2((link4pose.position.z-end_effector_z),(link4pose.position.x-end_effector_x)) #new theta from 													horizion
+	theta_new = atan2((link4pose.position.z-end_effector_z),(link4pose.position.x-end_effector_x)) #new theta from horizion
+
 	Gain = 0.4 #proportional gain
+
 	torque_before_added_object = 9.81 #constant value was applied
-	torque_new = (4.1*torque_before_added_object/9.81)*Gain*((theta_new/pi*180) - theta_before_added_object) 											#Torque = (T_before)*K*(delta_theta)
+	torque_new = (4.1*torque_before_added_object/9.81)*Gain*((theta_new/pi*180) - theta_before_added_object) #Torque = (T_before)*K*(delta_theta)
+
 	#Re-initializing publishers from before since in a different function
 	pub1 = rospy.Publisher('/rrrbot/joint1_torque_controller/command', Float64, queue_size=100)
 	pub2 = rospy.Publisher('/rrrbot/joint2_torque_controller/command', Float64, queue_size=100)
 	pub3 = rospy.Publisher('/rrrbot/joint3_torque_controller/command', Float64, queue_size=100)
+
 	#Publishing new torques to topics
 	pub1.publish(2.5*torque_before_added_object) #no difference
 	pub2.publish(1.2*torque_before_added_object) #no difference
 	pub3.publish((4.1*torque_before_added_object/9.81)+torque_new) #torque_before + torque_new
+
 	#Debugging info - difference in theta & torque_new
 	print "Theta Diff: ", (theta_new/pi*180-theta_before_added_object), "\t", "New Torque: ", torque_new
 ```
 
-that calculates the change in torque required to stabilize the end effector in the presence of an added mass. The new torque is found by augmenting the previous torque by multiplying the change in angle of the end-effector with the controller gain and previous torqe. 
+that calculates the change in torque required to stabilize the end effector in the presence of an added mass. The new torque is found by augmenting the previous torque by multiplying the change in angle of the end-effector with the controller gain and previous torque. 
 
 Be sure to import euler_from_quaternion from the tf.transformations, as Gazebo used quaternions to define the c-space of the end-effector. 
 
@@ -621,4 +628,4 @@ Be sure to import euler_from_quaternion from the tf.transformations, as Gazebo u
 #####Joint_Trajectory_Controller#####
 The joint_trajectory_controller is a bit more tricky to implement than the previous controllers. The trajectory controller takes in a trajectory control command and sends command to a position interface. 
 The JointTrajectoryController executes joint-space trajectories on a set of joints.
-The joint_trajectory_controller works a bit differently than the two previous controllers that were implemented.To send position commands via the joint_position_controller and torque commands via the joint_effort_controller, one need only send messages to a single topic. Contrarily, trajectory commands are sent in the form of the  [trajectory_msgs/JointTrajectory](http://docs.ros.org/api/trajectory_msgs/html/msg/JointTrajectory.html) message primarily by means of the action interface, and may also be sent by means of the topic interface. 
+The joint_trajectory_controller works a bit differently than the two previous controllers that were implemented. To send position commands via the joint_position_controller and torque commands via the joint_effort_controller, one need only send messages to a single topic. Contrarily, trajectory commands are sent in the form of the [trajectory_msgs/JointTrajectory](http://docs.ros.org/api/trajectory_msgs/html/msg/JointTrajectory.html) message primarily by means of the action interface, and may also be sent by means of the topic interface. 
