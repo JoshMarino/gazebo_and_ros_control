@@ -558,9 +558,146 @@ The following extension was investigated and attempted. However, we were not abl
 * Change the RRRBot to use a joint_trajectory_controller. Use this controller to have the RRRBot stabilize to a trajectory.
 
 #####Torque Control#####
-In order to include torque control, two main changes needed to be made to the existing package. We made this extension ny adding a new folder to our rrrbot_files package, called torque_control. This file contains the new .yaml file which generates torque commands of type JointEffortController instead of JointPositionController. With the new control command, the next addition is to create a publisher node that sends messages to the topic [/JointEffortControl](http://wiki.ros.org/robot_mechanism_controllers/JointEffortController). This will work on it's own, however it is better practice to interface with the controller via it's [action interface](http://wiki.ros.org/joint_trajectory_action). 
+Torque control in ros_control and Gazebo is done using the Joints_Effort_Controller, where effort can mean force or torque. We found that implementing torque control in Gazebo is not conceptually different from implementing position control. The main difference is that with position control, in the absence of joint limits, the robot can be commanded to any position in c-space. However, with torque control, once you command enough torque for the joint-link to cross the horizon, you give it enough energy for it to fall backwards under the force of gravity and become animated.
 
-(launch file added argument)
+To implement torque control, two main changes needed to be made to the existing package. We made this extension by adding a new folder to our rrrbot_files package, called torque_control. 
+
+*1) Step one:*
+We created a .yaml file which generates torque commands of type JointEffortController instead of JointPositionController. Notice that we still require the joint_state_controller to publish the current state of each joint. 
+```
+rrrbot:
+  # Publish all joint states -----------------------------------
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50  
+
+
+  # Effort Controllers ---------------------------------------
+  joint1_torque_controller:
+    type: effort_controllers/JointEffortController
+    joint: joint1
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+  joint2_torque_controller:
+    type: effort_controllers/JointEffortController
+    joint: joint2
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+  joint3_torque_controller:
+    type: effort_controllers/JointEffortController
+    joint: joint3
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+
+```
+*2) Step two:*
+With the new control command, the next addition is to create a publisher node that sends messages to the topic [JointEffortControl](http://wiki.ros.org/robot_mechanism_controllers/JointEffortController). To interface this topic with Gazebo, you can use the topic on its own. However, to control an actaul robot it is better practice to interface with the controller via it's [action interface](http://wiki.ros.org/joint_trajectory_action). 
+
+*3) Step three:*
+Next we modify the rrrbot_control_launch.launch file, where the control manager resides. This launcher will load the torque controller parameters into the parameter server, and the spawner tool will load and unload the effort controllers listed in the controller_manager. 
+```
+<launch>
+
+  <!-- Load joint controller configurations from YAML file to parameter server -->
+  <rosparam file="$(find rrrbot_files)/torque_control/rrrbot_torque_control.yaml" command="load"/>
+
+  <!-- load the controllers -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+	output="screen" ns="/rrrbot" args="joint_state_controller
+					  joint1_torque_controller
+					  joint2_torque_controller
+					  joint3_torque_controller"/>
+
+  <!-- convert joint states to TF transforms for rviz, etc -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+	respawn="false" output="screen">
+    <remap from="/joint_states" to="/rrrbot/joint_states" />
+  </node>
+
+</launch>
+```
+*4) Step four:*
+Next we need to edit our launch file to start up the node that will publish effort commands. 
+
+``` 
+<!-- Run joint torque controllers if true -->
+  <group if="$(arg torque)">
+    <!-- Include ros_control launch file to load joint torque controllers -->
+    <include file="$(find rrrbot_files)/torque_control/rrrbot_torque_control.launch" />
+
+    <!-- Create node to control joint torques using effort controller -->
+    <node name="rrrbot_joint_torques_node" pkg="rrrbot_files" type="rrrbot_torques_controller.py" output="screen" respawn="true" />
+  </group>
+
+```
+Now that we have two different actuation messages, to be able to control which controllers command the robot joints from the launch command, we add the roslaunch [arg](http://wiki.ros.org/roslaunch/XML/arg) tag. 
+
+```
+  <arg name="position" default="false"/>  
+  <arg name="torque" default="false"/>
+
+```
+*5) Step five:*
+Finally, you need to create the node that will publish the joint_effort_controller messages to the appropriate robot joints. 
+```
+
+#Define a RRRBot joint positions publisher for joint controllers.
+def rrrbot_joint_torques_publisher():
+
+
+	#Initiate node for controlling joint1 and joint2 positions.
+	rospy.init_node('rrrbot_joint_torque_node', anonymous=True)
+
+	#Define publishers for each joint position controller commands.
+	pub1 = rospy.Publisher('/rrrbot/joint1_torque_controller/command', Float64, queue_size=100)
+	pub2 = rospy.Publisher('/rrrbot/joint2_torque_controller/command', Float64, queue_size=100)
+	pub3 = rospy.Publisher('/rrrbot/joint3_torque_controller/command', Float64, queue_size=100)
+
+	rate = rospy.Rate(100) #100 Hz
+
+	#While loop to have joints follow a certain position, while rospy is not shutdown.
+	i = 0
+	while not rospy.is_shutdown():
+
+		#Have each joint follow a sine movement of sin(i/100).
+		torque = 9.81
+
+
+		#Publish the same sine movement to each joint.
+		if i < 100:
+			pub1.publish(2.5*torque)
+			pub2.publish(1.2*torque)
+			pub3.publish(4.1*torque/9.81)
+		else:
+			gazebo_link_states()
+
+		i = i+1
+
+```
+The top three links in our robot have the following inertial definition in the .xacro file: 
+```
+    <inertial>
+      <origin xyz="0 0 ${height2/2 - axel_offset}" rpy="0 0 0"/>
+      <mass value="1"/>
+      <inertia
+	  ixx="1.0" ixy="0.0" ixz="0.0"
+	  iyy="1.0" iyz="0.0"
+	  izz="1.0"/>
+    </inertial>
+```
+In layman terms, the links have moments of intertia of 1 about each axix, a mass of 1kg, and the center of mass located in the center of each link. What this essentially means is that we have a point mass at a distance of 1/2(link length) away from where the effort is being applied. This emplies the maximum torque we can apply to the centre link before it cross the horizon is: 
+
+torque = Force(Length/2)
+torque = mass*garvitational acceleration*(Length of link)/2
+torque = 1*9.81*1/2*1=4.905 Nm
+
+We found that a nice point to stabilize the arm to would be:
+
+* Maximum torque: 9.81 Nm
+* Effort on Link 1 (from base): 2.5xtoruqe
+* Effort on Link 2: 1.2xtorque
+* Effort on Link 3: 4.1xtorque
+
+*6) Step six:*
+Now we can roslaunch the joint_effort_controller simulation in Gazebo: `roslaunch rrrbot_files rrrbot_launch.launch torque:=true`
+The command should load the RRRBot in Gazebo and RViz. 
 
 #####Mass Balance#####
 This extension builds on the torque control of the arm. The goal was to balance the torque on the end effector, when a foreign mass is exterted on the end effector. The greatest challenge with coding this extension is filtering through all the Gazebo link_state messages to find the ones that are applicable. Two changes were made to the main code. 
