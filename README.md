@@ -9,6 +9,29 @@ Josh Marino and Mahdieh Nejati
 **Mini Project, Fall 2014, Northwestern Univeristy**
 
 
+
+#### Table of Contents ####
+[Project Overview](#Project Overview)
+
+[Useful Tutorials](#Useful Tutorials)
+
+[Tutorial Changes for ROS Indigo](#Tutorial Changes for ROS Indigo)
+
+[Goals of Project](#Goals of Project)
+
+[Goal 1](#Goal 1)
+
+[Goal 2](#Goal 2)
+[Project Extensions](#Project Extensions)
+
+[Torque Control](#Torque Control)
+
+[Mass Balance](#Mass Balance)
+
+[Joint_Trajectory_Controller](#Joint_Trajectory_Controller)
+
+
+
 #### Project Overview ####
 ROS_control is an exciting new development in the world of ROS, created and maintained by Adolfo Rodriquez Tsouroukdissian, and maintained by him <adolfo.rodriguez@pal-robotics.com>, Dave Coleman <davetcoleman@gmail.com>, and Wim Meeussen <wim@hidof.com>. As with any ROS package, the documentaion on different aspects of this multi-faceted package are lacking and dependent on the ROS communities' implementation and subsequent documentation. The purpose of this project was to understand how ros_control and the world of Gazebo can communicate together in order to simulate robot actuation and sensing mechanisms. Specifically, we wanted to understand:
 
